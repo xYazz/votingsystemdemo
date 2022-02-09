@@ -28,6 +28,7 @@ class VoteList(APIView):
    
     def get(self, request, format=None):
         user = get_user(request)
+        
         votes = Vote.objects.filter(end_date__gt=datetime.datetime.now(tz=timezone.utc), start_date__lt=datetime.datetime.now(tz=timezone.utc))
         public = votes.exclude(private=True)
         private = votes.filter(private=True, id__in=CanVote.objects.filter(voter=user, can_vote=True))
@@ -138,12 +139,16 @@ class AddCandidateView(APIView):
         return Response({'Bad Request': 'Invalid Data...'}, status=status.HTTP_400_BAD_REQUEST)
 
 class CanVoteRequest(APIView):
-    votes = Vote.objects.all()
     def post(self, request, format=None):
+        
+        try:
+            votes = Vote.objects.all()
+        except ObjectDoesNotExist:
+            return Response({'Błąd': 'Brak oczekujących prośb o dołączenie'}, status=status.HTTP_204_NO_CONTENT)
         code = request.data.get('code')
         user = get_user(request)
         try:
-            vote = self.votes.get(code=code)
+            vote = votes.get(code=code)
         except ObjectDoesNotExist:
             return Response({'Błąd': 'Wprowadzony kod jest nieprawidłowy'}, status=status.HTTP_400_BAD_REQUEST)
         try:
@@ -155,6 +160,7 @@ class CanVoteRequest(APIView):
 
     def get(self, request, format=None):        
         user = get_user(request)
+        
         try:
             can_vote = CanVote.objects.filter(vote__in = Vote.objects.filter(owner=user)).exclude(can_vote=True)
         except ObjectDoesNotExist:

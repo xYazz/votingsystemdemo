@@ -13,6 +13,7 @@ import axiosInstance from '../axios';
 import { Link } from "react-router-dom";
 import Button from "@mui/material/Button";
 import Stack from '@mui/material/Stack';
+import { Paper } from '@material-ui/core';
 const useStyles = makeStyles((theme) => ({
 	cardMedia: {
 		paddingTop: '56.25%', // 16:9
@@ -40,50 +41,50 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-class Votes extends React.Component{
-	constructor(){
+class Votes extends React.Component {
+	constructor() {
 		super()
-		this.state = { votes: [], toUrl: '/vote/'
+		this.state = {
+			votes: [], toUrl: '/vote/'
 		}
 	}
 
-	getCurrentVotes = () =>{
+	getCurrentVotes = () => {
 		axiosInstance("api/votes")
-		.then((response) => {
-			this.setState({...this.state, votes: response.data, toUrl: '/vote'});
-		  }).catch(error => {
-			  alert(error)
-            window.location.href = '/login';
-		  })
+			.then((response) => {
+				this.setState({ ...this.state, votes: response.data, toUrl: '/vote' });
+			}).catch(error => {
+				console.log(error)
+			})
 	}
 
-	getFinishedVotes = () =>{
+	getFinishedVotes = () => {
 		axiosInstance("api/finished_votes")
-		.then((response) => {
-			this.setState({votes: response.data, toUrl: "/results"});
-		}).catch(error => {
-            console.log(error.response.data)
-		  })
+			.then((response) => {
+				this.setState({ votes: response.data, toUrl: "/results" });
+			}).catch(error => {
+				console.log(error.response.data)
+			})
 	}
 
-	componentDidMount(){
+	componentDidMount() {
 		this.getCurrentVotes();
 	}
 
 
-		
-	
-	render(){
+
+
+	render() {
 		const { classes } = this.props;
 		return (<div>
-			{<React.Fragment>
+			{this.state?.votes?.length > 0 ? <React.Fragment>
 				<Stack spacing={2} direction="row" justifyContent={"center"} marginTop={"15px"} marginBottom={"15px"}>
-						<Button color="primary" variant="contained" onClick={this.getCurrentVotes}>
-							Trwające głosowania
-						</Button>
-						<Button color="secondary" variant="contained" onClick={this.getFinishedVotes}>
-							Zakończone głosowania
-						</Button>
+					<Button color="primary" variant="contained" onClick={this.getCurrentVotes}>
+						Trwające głosowania
+					</Button>
+					<Button color="secondary" variant="contained" onClick={this.getFinishedVotes}>
+						Zakończone głosowania
+					</Button>
 				</Stack>
 				<Container maxWidth="md" component="main" display='flex' >
 					<Grid container spacing={5} alignItems="flex-end" >
@@ -95,22 +96,22 @@ class Votes extends React.Component{
 										<CardMedia
 											className={classes.cardMedia}
 										/>
-										<CardActionArea onClick={() => {this.props.history.push(this.state.toUrl, {vote_id: vote.id})}}>
-										<CardContent className={classes.cardContent}>
-											<Typography
-												gutterBottom
-												variant="h6"
-												component="h2"
-												className={classes.voteTitle}
-											>
-												{vote.name}...
-											</Typography>
-											<div className={classes.voteText}>
-												<Typography color="textSecondary">
-													{vote.description}...
+										<CardActionArea onClick={() => { this.props.history.push(this.state.toUrl, { vote_id: vote.id }) }}>
+											<CardContent className={classes.cardContent}>
+												<Typography
+													gutterBottom
+													variant="h6"
+													component="h2"
+													className={classes.voteTitle}
+												>
+													{vote.name}...
 												</Typography>
-											</div>
-										</CardContent>
+												<div className={classes.voteText}>
+													<Typography color="textSecondary">
+														{vote.description}...
+													</Typography>
+												</div>
+											</CardContent>
 										</CardActionArea>
 									</Card>
 								</Grid>
@@ -118,9 +119,13 @@ class Votes extends React.Component{
 						})}
 					</Grid>
 				</Container>
-			</React.Fragment>
-					}</div>
+			</React.Fragment> :
+				<Paper variant="outlined" sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
+					<Typography component="h1" variant="h5">
+						Brak głosowań do wyświetlenia
+					</Typography></Paper>}
+		</div>
 		);
 	}
 };
-export default  withStyles(useStyles)(Votes);;
+export default withStyles(useStyles)(Votes);;
