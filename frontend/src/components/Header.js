@@ -74,6 +74,24 @@ function Header(props) {
 		setOpen(false);
 	};
 
+	function handleListKeyDown(event) {
+		if (event.key === 'Tab') {
+		  event.preventDefault();
+		  setOpen(false);
+		} else if (event.key === 'Escape') {
+		  setOpen(false);
+		}
+	  }
+	
+	  const prevOpen = React.useRef(open);
+	  React.useEffect(() => {
+		if (prevOpen.current === true && open === false) {
+		  anchorRef.current.focus();
+		}
+	
+		prevOpen.current = open;
+	  }, [open]);
+
 	return (
 
 		<React.Fragment>
@@ -112,7 +130,7 @@ function Header(props) {
 									aria-haspopup="true"
 									onClick={handleToggle}
 								>
-									Dashboard
+									Menu
 								</Button>
 								<Popper
 									open={open}
