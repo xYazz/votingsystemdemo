@@ -156,8 +156,8 @@ function Header(props) {
 														aria-labelledby="composition-button"
 														onKeyDown={handleListKeyDown}
 													>
-														<MenuItem onClick={handleClick('/register')}>Rejestracja</MenuItem>
-														<MenuItem onClick={handleClick('/login')}>Logowanie</MenuItem>
+														<MenuItem onClick={() => handleClick('/register')}>Rejestracja</MenuItem>
+														<MenuItem onClick={() => handleClick('/login')}>Logowanie</MenuItem>
 													</MenuList>
 												</ClickAwayListener>
 											</Paper>
@@ -177,66 +177,58 @@ function Header(props) {
 						// 	  Logowanie
 						//   </Button>
 					) :
-						<>
-							<Button
-								href="#"
-								color="primary"
-								variant="outlined"
-								className={classes.link}
-								component={NavLink}
-								to="/create"
-							>
-								Utwórz głosowanie
-							</Button>
-							<Button
-								href="#"
-								color="primary"
-								variant="outlined"
-								className={classes.link}
-								component={NavLink}
-								to="/votes"
-							>
-								Lista głosowań
-							</Button>
-							<Button
-								href="#"
-								color="primary"
-								variant="outlined"
-								className={classes.link}
-								component={NavLink}
-								to="/join"
-							>
-								Dołącz do głosowania
-							</Button>
-							<Button
-								href="#"
-								color="primary"
-								variant="outlined"
-								className={classes.link}
-								component={NavLink}
-								to="/pending"
-							>
-								Prośby o dołączenie
-							</Button>
-							<Button
-								color="primary"
-								variant="outlined"
-								className={classes.link}
-								component={NavLink}
-								to="/profile"
-							>
-								Profil
-							</Button>
-							<Button
-								href="#"
-								color="primary"
-								variant="outlined"
-								className={classes.link}
-								component={NavLink}
-								to="/logout"
-							>
-								Wylogowanie
-							</Button></>
+					(
+						<Stack direction="row" spacing={2}>
+							<div>
+								<Button
+									ref={anchorRef}
+									id="composition-button"
+									aria-controls={open ? 'composition-menu' : undefined}
+									aria-expanded={open ? 'true' : undefined}
+									aria-haspopup="true"
+									onClick={handleToggle}
+								>
+									Menu
+								</Button>
+								<Popper
+									open={open}
+									anchorEl={anchorRef.current}
+									role={undefined}
+									placement="bottom-start"
+									transition
+									disablePortal
+								>
+									{({ TransitionProps, placement }) => (
+										<Grow
+											{...TransitionProps}
+											style={{
+												transformOrigin:
+													placement === 'bottom-start' ? 'left top' : 'left bottom',
+											}}
+										>
+											<Paper>
+												<ClickAwayListener onClickAway={handleClose}>
+													<MenuList
+														autoFocusItem={open}
+														id="composition-menu"
+														aria-labelledby="composition-button"
+														onKeyDown={handleListKeyDown}
+													>
+														<MenuItem onClick={() => handleClick('/register')}>Utwórz głosowanie</MenuItem>
+														<MenuItem onClick={() => handleClick('/votes')}>Lista głosowań</MenuItem>
+														<MenuItem onClick={() => handleClick('/profile')}>Profil</MenuItem>
+														<MenuItem onClick={() => handleClick('/join')}>Dołącz do głosowania</MenuItem>
+														<MenuItem onClick={() => handleClick('/pending')}>Prośby o dołączenie</MenuItem>
+														<MenuItem onClick={() => handleClick('/logout')}>Wyloguj się</MenuItem>
+														
+													</MenuList>
+												</ClickAwayListener>
+											</Paper>
+										</Grow>
+									)}
+								</Popper>
+							</div>
+						</Stack>)
 					}
 
 
