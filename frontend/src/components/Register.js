@@ -239,8 +239,6 @@ export default function SignUp() {
 		} else {
 			upper_field = field.charAt(0).toUpperCase() + field.slice(1);
 		}
-		console.log("test")
-		console.log(field, value)
 		if (value == '') {
 			updateFormData({
 				...formData,
@@ -300,8 +298,6 @@ export default function SignUp() {
 				.then((res) => {
 					if (res.status == 201) {
 						history.push('/login');
-						console.log(res);
-						console.log(res.data);
 					} else {
 						console.log(res)
 					}
