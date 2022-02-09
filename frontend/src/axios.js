@@ -26,6 +26,7 @@ async function (error) {
 
     if (typeof error.response === 'undefined') {
         alert(baseURL)
+        alert("test")
         alert(
             'A server/network error occurred. ' +
                 'Looks like CORS might be the problem. ' +
