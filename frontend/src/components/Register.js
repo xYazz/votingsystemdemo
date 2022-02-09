@@ -75,11 +75,6 @@ const social_status = [
 		value: '5',
 		label: 'Osoba bezrobotna',
 	},
-
-	{
-		value: '6',
-		label: 'Wieś',
-	},
 ];
 const place_of_residences = [
 	{
