@@ -5,8 +5,7 @@
   "homepage": ".",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js", 
-    "heroku-postbuild": "webpack --mode production" 
+    "build": "webpack --mode production --config ./frontend/webpack.config.js"
   },
   "engines": {
     "node": "14.18.1",
