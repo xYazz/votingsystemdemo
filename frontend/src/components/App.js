@@ -21,6 +21,7 @@ import { SnackbarProvider } from "notistack";
 import Results from "./Results";
 import JoinVote from "./JoinVote";
 import PendingRequests from "./PendingRequests";
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
 export default class App extends Component {
     constructor(props) {

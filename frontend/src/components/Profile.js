@@ -35,6 +35,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { useState } from 'react';
 import { promptResponse } from './AddCandidates';
 import { useSnackbar } from 'notistack';
+import { Puff } from 'react-loader-spinner';
 
 const vote_type = {
   1: 'Wybory prezydenckie',
@@ -84,6 +85,7 @@ function Profile() {
     confirmDialogOpen: false,
     toDeleteId: false,
     toDeleteURL: false,
+    loading:true,
   })
 
 
@@ -100,7 +102,9 @@ function Profile() {
         votes: response.data.votes,
         open: array,
         confirmDialogOpen: false,
+        loading: false,
       });
+      
     });
   }
 
@@ -153,8 +157,10 @@ function Profile() {
     <EditVote state={state} setState={setState} getProfileDetails={getProfileDetails} />
     <EditCandidate state={state} setState={setState} getProfileDetails={getProfileDetails} />
     <Container component="main" maxWidth="lg" sx={{ mb: 4 }}>
-      <Paper elevation={16} sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
-
+      {state.loading?<Box mt={5} style={{display: 'flex', justifyContent: 'center', alignItems:'center'}}><Box style={{position: 'flex',
+    alignSelf: 'center',
+    justifyContent: 'center'}} mt={5}><Puff color="#A9A9A9" height={80} width={80} m="auto"/></Box></Box>:(<Paper elevation={16} sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
+      
         <h3>{state.userData.first_name} {state.userData.last_name}</h3>
         <p>PESEL: {state.userData.pesel}</p>
         <p>Adres e-mail: {state.userData.email}</p>
@@ -323,8 +329,8 @@ function Profile() {
               )))}
 
           </Table>
-        </TableContainer> : null}
-      </Paper>
+        </TableContainer>:null}
+      </Paper>)}
     </Container>
   </div>;
 };
