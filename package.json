@@ -5,8 +5,7 @@
   "homepage": ".",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack --mode production --watch",
-    "build": "webpack --mode production"
+    "build": "/frontend/webpack --mode production"
   },
   "engines": {
     "node": "14.18.1",
