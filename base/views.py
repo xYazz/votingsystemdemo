@@ -1,14 +1,6 @@
 import datetime
-from msilib.schema import ListView
-from tkinter.messagebox import NO
-from urllib import request
-from rest_framework.decorators import api_view
 from django.utils import timezone
 from django.db.models import Count
-from django.db.models.query import QuerySet
-from django.http.response import HttpResponse
-from django.shortcuts import render
-from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 from django.views import View
 from rest_framework import generics, status, permissions
