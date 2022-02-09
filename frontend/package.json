@@ -2,10 +2,15 @@
   "name": "frontend",
   "version": "1.0.0",
   "description": "",
+  "homepage": ".",
   "main": "index.js",
   "scripts": {
     "dev": "webpack --mode production --watch",
     "build": "webpack --mode production"
+  },
+  "engines": {
+    "node": "14.6.0",
+    "npm": "6.14.15"
   },
   "keywords": [],
   "author": "",
