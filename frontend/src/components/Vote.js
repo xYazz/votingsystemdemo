@@ -132,7 +132,8 @@ class Vote extends Component {
 		const error = this.state.picked_votes>this.state.max_votes;
 		const { classes } = this.props;
         return <div>
-            {console.log(this.state)}
+			<Container maxWidth="md" component="main" display='flex' > 
+            <Paper elevation={16} sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
             <h3>{this.name}</h3>
             <p>Rodzaj głosowania: {this.state.type}</p>
             <p>Opis głosowania: {this.state.description}</p>
@@ -177,7 +178,8 @@ class Vote extends Component {
 					</Button>
 			</Stack>
 			</Box>:<h2>Nie można oddać więcej głosów. Wyniki zostaną udostępnione po zakończeniu głosowania.</h2>}
-
+			</Paper>
+			</Container>
 
 
         </div>

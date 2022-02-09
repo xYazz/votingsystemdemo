@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        zIndex: 1000,
     },
     avatar: {
         margin: theme.spacing(1),
@@ -36,10 +37,14 @@ const useStyles = makeStyles((theme) => ({
     form: {
         width: '100%', // Fix IE 11 issue.
         marginTop: theme.spacing(3),
+        zIndex: 1200,
     },
     submit: {
         margin: theme.spacing(3, 0, 2),
     },
+    textfield: {
+        zIndex: 1300,
+    }
 }));
 
 
@@ -115,7 +120,7 @@ const CreateVotePage = () => {
 
     return <div>
         <Container component="main" maxWidth="md" sx={{ mb: 4 }}>
-            <Paper variant="outlined" sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
+        <Paper elevation={16} sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
                 <form className={classes.form} noValidate>
                     <Grid container spacing={2}>
                         <Grid item xs={12} align="center">
@@ -127,6 +132,7 @@ const CreateVotePage = () => {
                             <TextField
                                 variant="outlined"
                                 required
+                                className={classes.textfield}
                                 fullWidth
                                 select
                                 name="type"

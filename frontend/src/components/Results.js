@@ -110,7 +110,6 @@ const Results = (props) => {
     return <React.Fragment>{
         state ?
             <Container component="main" maxWidth="xl" sx={{ mb: 4 }}>
-                <form className={classes.form} noValidate>
                     <Container component="main" maxWidth="xs" sx={{ mb: 2 }}>
                         <Grid container spacing={2}>
                             <Grid item xs={12} align="center">
@@ -159,7 +158,6 @@ const Results = (props) => {
                             }
                         </Grid>
                     </Container>
-                </form>
                 {console.log(state)}
                 {choiceData ?
                     <Chart

@@ -68,7 +68,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function Profile () {
+function Profile() {
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
   const [state, setState] = useState({
@@ -94,7 +94,8 @@ function Profile () {
       for (const element of response.data.votes) {
         array[element.id] = false;
       }
-      setState({...state,
+      setState({
+        ...state,
         userData: response.data.user,
         votes: response.data.votes,
         open: array,
@@ -108,16 +109,16 @@ function Profile () {
   }, []);
 
   const addCandidate = (data) => {
-      history.push("/add_candidate", { vote_id: data })
+    history.push("/add_candidate", { vote_id: data })
   };
 
-  const handleConfirmClick = () =>  {
+  const handleConfirmClick = () => {
     axiosInstance.delete(state.toDeleteURL + state.toDeleteId)
       .then((res) => {
         if (res.status == 202) {
           promptResponse(enqueueSnackbar, 'Pomyślnie usunięto element.', 'success')
         } else {
-          
+
           promptResponse(enqueueSnackbar, 'Wystąpił nieznany błąd.', 'error')
         }
         getProfileDetails()
@@ -152,8 +153,8 @@ function Profile () {
     <EditVote state={state} setState={setState} getProfileDetails={getProfileDetails} />
     <EditCandidate state={state} setState={setState} getProfileDetails={getProfileDetails} />
     <Container component="main" maxWidth="lg" sx={{ mb: 4 }}>
-      <Paper variant="outlined" sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
-        
+      <Paper elevation={16} sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
+
         <h3>{state.userData.first_name} {state.userData.last_name}</h3>
         <p>PESEL: {state.userData.pesel}</p>
         <p>Adres e-mail: {state.userData.email}</p>
@@ -161,7 +162,7 @@ function Profile () {
         <p>Edukacja: {state.userData.education}</p>
         <p>Obywatelstwo: {state.userData.citizenship}</p>
         <p>Miejsce zamieszkania: {state.userData.place_of_residence}</p>
-        {state.votes.length>0?<TableContainer component={Paper}>
+        {state.votes.length > 0 ? <TableContainer component={Paper}>
           <Table aria-label="collapsible table">
             <TableHead>
               <TableRow>
@@ -229,14 +230,14 @@ function Profile () {
                         size="small"
                         id="1"
                         name={vote.id}
-                        onClick={() => {setState({ ...state, confirmDialogOpen: true, toDeleteId: vote.id, toDeleteURL: '/api/get-vote/' })}}
+                        onClick={() => { setState({ ...state, confirmDialogOpen: true, toDeleteId: vote.id, toDeleteURL: '/api/get-vote/' }) }}
                       >
                         <DeleteForeverIcon />
                       </IconButton>
                     </TableCell>
                     <TableCell align="right">{vote.name}</TableCell>
                     <TableCell align="right">{vote_type[vote.type]}</TableCell>
-                    <TableCell align="right">{vote.private?vote.code:"Brak"}</TableCell>
+                    <TableCell align="right">{vote.private ? vote.code : "Brak"}</TableCell>
                     <TableCell align="right">{moment(vote.start_date).format("YYYY-MM-DD " + "hh:mm:ss")}</TableCell>
                     <TableCell align="right">{moment(vote.end_date).format("YYYY-MM-DD " + "hh:mm:ss")}</TableCell>
                   </TableRow>
@@ -287,7 +288,7 @@ function Profile () {
                                         size="small"
                                         id="1"
                                         name={candidate.id}
-                                        onClick={() => {setState({ ...state, confirmDialogOpen: true, toDeleteId: candidate.id, toDeleteURL: '/api/get-candidate/' })}}
+                                        onClick={() => { setState({ ...state, confirmDialogOpen: true, toDeleteId: candidate.id, toDeleteURL: '/api/get-candidate/' }) }}
                                       >
                                         <DeleteForeverIcon />
                                       </IconButton>
@@ -322,7 +323,7 @@ function Profile () {
               )))}
 
           </Table>
-        </TableContainer>:null}
+        </TableContainer> : null}
       </Paper>
     </Container>
   </div>;

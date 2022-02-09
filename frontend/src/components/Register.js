@@ -306,6 +306,7 @@ export default function SignUp() {
 
 	return (
 		<Container component="main" maxWidth="xs">
+			<Paper elevation={16} sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
 			<CssBaseline />
 			<div className={classes.paper}>
 				<Avatar className={classes.avatar}></Avatar>
@@ -493,6 +494,7 @@ export default function SignUp() {
 					</Grid>
 				</form>
 			</div>
+			</Paper>
 		</Container>
 	);
 }

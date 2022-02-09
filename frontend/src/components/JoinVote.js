@@ -13,6 +13,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { Paper } from '@mui/material';
 import MenuItem from '@material-ui/core/MenuItem';
 import { SnackbarProvider, useSnackbar } from 'notistack';
 
@@ -93,11 +94,11 @@ export default function JoinVote(props) {
 
     const handleButtonPressed = (e) => {
         e.preventDefault();
-        if (formData.code.length==6){
+        if (formData.code.length == 6) {
             axiosInstance.post("/api/can-vote", {
                 code: formData.code,
             }).catch(error => {
-                
+
                 promptResponse(enqueueSnackbar, error.response.data['Błąd'], 'error');
             })
                 .then(response => {
@@ -112,7 +113,7 @@ export default function JoinVote(props) {
         else {
             promptResponse(enqueueSnackbar, 'Wprowadzony kod jest nieprawidłowy.', 'error');
         }
-        
+
 
     }
 
@@ -122,42 +123,44 @@ export default function JoinVote(props) {
 
 
         <Container component="main" maxWidth="xs">
-            <CssBaseline />
-            <div className={classes.paper}>
-                <Avatar className={classes.avatar}></Avatar>
-                <Typography component="h1" variant="h5">
-                    Dołącz do głosowania
-                </Typography>
-                <form className={classes.form} noValidate>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                id="code"
-                                label="Kod dostępu"
-                                name="code"
-                                autoComplete="code"
-                                onChange={handleChange}
-                            />
+            <Paper elevation={16} sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
+                <CssBaseline />
+                <div className={classes.paper}>
+                    <Avatar className={classes.avatar}></Avatar>
+                    <Typography component="h1" variant="h5">
+                        Dołącz do głosowania
+                    </Typography>
+                    <form className={classes.form} noValidate>
+                        <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                                <TextField
+                                    variant="outlined"
+                                    required
+                                    fullWidth
+                                    id="code"
+                                    label="Kod dostępu"
+                                    name="code"
+                                    autoComplete="code"
+                                    onChange={handleChange}
+                                />
+                            </Grid>
                         </Grid>
-                    </Grid>
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            color="primary"
+                            className={classes.submit}
 
-                        onClick={handleButtonPressed}
-                    >
-                        Dołącz
-                    </Button>
-                    <Grid container justifyContent="flex-end">
-                    </Grid>
-                </form>
-            </div>
+                            onClick={handleButtonPressed}
+                        >
+                            Dołącz
+                        </Button>
+                        <Grid container justifyContent="flex-end">
+                        </Grid>
+                    </form>
+                </div>
+            </Paper>
         </Container>);
 }
 

@@ -5,7 +5,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import Container from '@material-ui/core/Container';
+import { Container } from '@mui/material';
 import { withStyles } from "@material-ui/core/styles";
 import { CardActionArea, CardHeader } from '@material-ui/core';
 import { Redirect } from 'react-router';
@@ -13,7 +13,8 @@ import axiosInstance from '../axios';
 import { Link } from "react-router-dom";
 import Button from "@mui/material/Button";
 import Stack from '@mui/material/Stack';
-import { Paper } from '@material-ui/core';
+import { Paper } from '@mui/material';
+
 const useStyles = makeStyles((theme) => ({
 	cardMedia: {
 		paddingTop: '56.25%', // 16:9
@@ -78,7 +79,7 @@ class Votes extends React.Component {
 		const { classes } = this.props;
 		return (<div>
 			{this.state?.votes?.length > 0 ? <React.Fragment>
-				<Stack spacing={2} direction="row" justifyContent={"center"} marginTop={"15px"} marginBottom={"15px"}>
+				<Stack spacing={2} direction="row" justifyContent={"center"} marginTop={1/10} marginBottom={1/10}>
 					<Button color="primary" variant="contained" onClick={this.getCurrentVotes}>
 						Trwające głosowania
 					</Button>
@@ -87,6 +88,7 @@ class Votes extends React.Component {
 					</Button>
 				</Stack>
 				<Container maxWidth="md" component="main" display='flex' >
+				<Paper elevation={16} sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
 					<Grid container spacing={5} alignItems="flex-end" >
 						{this.state.votes.map((vote) => {
 							return (
@@ -118,12 +120,13 @@ class Votes extends React.Component {
 							);
 						})}
 					</Grid>
+					</Paper>
 				</Container>
 			</React.Fragment> :
-				<Container maxWidth="sm" component="main" display='flex' >
-					<Paper variant="outlined" sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
+				<Container component="main" maxWidth="sm" marginTop={1/10} sx={{ mb: 4 }}>
+					<Paper elevation={16} sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
 						<Typography component="h1" variant="h5">
-							Brak głosowań do wyświetlenia
+							Brak głosowań do wyświetlenia.
 						</Typography>
 					</Paper>
 				</Container>

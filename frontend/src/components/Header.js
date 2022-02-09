@@ -16,7 +16,7 @@ import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Grow from '@mui/material/Grow';
 import Paper from '@mui/material/Paper';
 import Popper from '@mui/material/Popper';
-import MenuItem from '@mui/material/MenuItem';
+import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import Stack from '@mui/material/Stack';
 
@@ -46,6 +46,9 @@ const useStyles = makeStyles((theme) => ({
 	toolbarTitle: {
 		flexGrow: 1,
 	},
+	paper: {
+		zIndex: 1500,
+	}
 }));
 
 
@@ -120,7 +123,7 @@ function Header(props) {
 						</Link>
 					</Typography>
 					{(!user) ? (
-						<Stack direction="column" spacing={2}>
+						<Stack direction="row" spacing={2}>
 							<div>
 								<Button
 									ref={anchorRef}
@@ -146,9 +149,10 @@ function Header(props) {
 											style={{
 												transformOrigin:
 													placement === 'bottom-start' ? 'left top' : 'left bottom',
+												flexDirection: 'column',
 											}}
 										>
-											<Paper>
+											<Paper elevation={18} className={classes.paper}>
 												<ClickAwayListener onClickAway={handleClose}>
 													<MenuList
 														autoFocusItem={open}
@@ -165,20 +169,7 @@ function Header(props) {
 									)}
 								</Popper>
 							</div>
-						</Stack>
-						// 	  <Button
-						// 	  href="#"
-						// 	  color="primary"
-						// 	  variant="outlined"
-						// 	  className={classes.link}
-						// 	  component={NavLink}
-						// 	  to="/login"
-						//   >
-						// 	  Logowanie
-						//   </Button>
-					) :
-					(
-						<Stack direction="column" spacing={2}>
+						</Stack>) :(<Stack direction="column" spacing={2}>
 							<div>
 								<Button
 									ref={anchorRef}
@@ -194,6 +185,7 @@ function Header(props) {
 									open={open}
 									anchorEl={anchorRef.current}
 									role={undefined}
+									className={classes.paper}
 									placement="bottom-start"
 									transition
 									disablePortal
@@ -206,7 +198,7 @@ function Header(props) {
 													placement === 'bottom-start' ? 'left top' : 'left bottom',
 											}}
 										>
-											<Paper>
+											<Paper elevation={18} className={classes.paper}>
 												<ClickAwayListener onClickAway={handleClose}>
 													<MenuList
 														autoFocusItem={open}
@@ -214,7 +206,7 @@ function Header(props) {
 														aria-labelledby="composition-button"
 														onKeyDown={handleListKeyDown}
 													>
-														<MenuItem onClick={() => handleClick('/register')}>Utwórz głosowanie</MenuItem>
+														<MenuItem onClick={() => handleClick('/create')}>Utwórz głosowanie</MenuItem>
 														<MenuItem onClick={() => handleClick('/votes')}>Lista głosowań</MenuItem>
 														<MenuItem onClick={() => handleClick('/profile')}>Profil</MenuItem>
 														<MenuItem onClick={() => handleClick('/join')}>Dołącz do głosowania</MenuItem>
