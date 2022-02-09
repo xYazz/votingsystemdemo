@@ -120,7 +120,7 @@ function Header(props) {
 						</Link>
 					</Typography>
 					{(!user) ? (
-						<Stack direction="row" spacing={2}>
+						<Stack direction="column" spacing={2}>
 							<div>
 								<Button
 									ref={anchorRef}
@@ -178,7 +178,7 @@ function Header(props) {
 						//   </Button>
 					) :
 					(
-						<Stack direction="row" spacing={2}>
+						<Stack direction="column" spacing={2}>
 							<div>
 								<Button
 									ref={anchorRef}
