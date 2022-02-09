@@ -120,10 +120,14 @@ class Votes extends React.Component {
 					</Grid>
 				</Container>
 			</React.Fragment> :
-				<Paper variant="outlined" sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
-					<Typography component="h1" variant="h5">
-						Brak głosowań do wyświetlenia
-					</Typography></Paper>}
+				<Container maxWidth="sm" component="main" display='flex' >
+					<Paper variant="outlined" sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
+						<Typography component="h1" variant="h5">
+							Brak głosowań do wyświetlenia
+						</Typography>
+					</Paper>
+				</Container>
+			}
 		</div>
 		);
 	}

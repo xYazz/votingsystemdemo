@@ -61,126 +61,135 @@ function PendingRequests() {
         confirmDialogOpen: false,
         toDeleteId: false,
         toDeleteURL: false,
-        extra_data: false
+        extra_data: false,
+        error: ''
     })
 
 
 
     const getPendingRequestsDetails = () => {
         axiosInstance.get('/api/can-vote').then((response) => {
-            setState({...state, extra_data: response.data
+            setState({
+                ...state, extra_data: response.data
+            })
+            }).catch(error => {
+                setState({
+                    ...state, error: "Brak oczekujących próśb"
+                })
             });
-        });
-    }
+        }
 
     useEffect(() => {
-        getPendingRequestsDetails();
-    }, []);
-
-    const acceptRequest = (id) => {
-        axiosInstance.patch('api/can-vote/' + id, {
-            can_vote: true,
-        }).then(response => {
-            promptResponse(enqueueSnackbar, 'Zaakceptowano prośbę.', 'success');
             getPendingRequestsDetails();
-        })
-    }
+        }, []);
 
-    const handleConfirmClick = () => {
-        axiosInstance.delete(state.toDeleteURL + state.toDeleteId)
-            .then((res) => {
-                if (res.status == 202) {
-                    promptResponse(enqueueSnackbar, 'Pomyślnie usunięto element.', 'success')
-                } else {
-
-                    promptResponse(enqueueSnackbar, 'Wystąpił nieznany błąd.', 'error')
-                }   
+        const acceptRequest = (id) => {
+            axiosInstance.patch('api/can-vote/' + id, {
+                can_vote: true,
+            }).then(response => {
+                promptResponse(enqueueSnackbar, 'Zaakceptowano prośbę.', 'success');
                 getPendingRequestsDetails();
             })
-            .catch(error => {
-                console.log(error)
-            })
-    }
-    return <div>
-        <Dialog
-            open={state.confirmDialogOpen}
-            TransitionComponent={Transition}
-            keepMounted
-            onClose={() => {
-                setState({ ...state, confirmDialogOpen: false });
-            }}
-            aria-describedby="alert-dialog-slide-description"
-        >
-            <DialogTitle>{"Uwaga"}</DialogTitle>
-            <DialogContent>
-                <DialogContentText id="alert-dialog-slide-description">
-                    Czy na pewno chcesz usunąć wybrany element?
-                </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={() => {
+        }
+
+        const handleConfirmClick = () => {
+            axiosInstance.delete(state.toDeleteURL + state.toDeleteId)
+                .then((res) => {
+                    if (res.status == 202) {
+                        promptResponse(enqueueSnackbar, 'Pomyślnie usunięto element.', 'success')
+                    } else {
+
+                        promptResponse(enqueueSnackbar, 'Wystąpił nieznany błąd.', 'error')
+                    }
+                    getPendingRequestsDetails();
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        }
+        return <div>
+            <Dialog
+                open={state.confirmDialogOpen}
+                TransitionComponent={Transition}
+                keepMounted
+                onClose={() => {
                     setState({ ...state, confirmDialogOpen: false });
-                }}>Anuluj</Button>
-                <Button onClick={handleConfirmClick}>Potwierdź</Button>
-            </DialogActions>
-        </Dialog>
-        <Container component="main" maxWidth="lg" sx={{ mb: 4 }}>
-            <Paper variant="outlined" sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
-                {state?.extra_data?
-                (state.extra_data.can_vote.length == 0)?<h2>Brak oczekujących próśb o dołączenie.</h2> :
-                    <TableContainer component={Paper}>
-                        <Table aria-label="collapsible table">
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell />
-                                    <TableCell />
-                                    <TableCell align="right">Nazwa</TableCell>
-                                    <TableCell align="right">Kod dostępu</TableCell>
-                                    <TableCell align="right">E-mail</TableCell>
-                                    <TableCell align="right">Imię</TableCell>
-                                    <TableCell align="right">Nazwisko</TableCell>
-                                </TableRow>
-                            </TableHead>
-                                {state.extra_data.can_vote.map((can_vote) => (
-                                    <React.Fragment>
-                                        <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-                                            <TableCell>
-                                                <IconButton
-                                                    aria-label="add"
-                                                    size="small"
-                                                    id="1"
-                                                    name={can_vote.id}
-                                                    onClick={((e) => acceptRequest(can_vote.id))}
-                                                >
-                                                    <PersonAddIcon />
-                                                </IconButton>
-                                            </TableCell>
-                                            <TableCell>
-                                                <IconButton
-                                                    aria-label="delete"
-                                                    size="small"
-                                                    id="1"
-                                                    name={can_vote.id}
-                                                    onClick={() => { setState({ ...state, confirmDialogOpen: true, toDeleteId: can_vote.id, toDeleteURL: '/api/can-vote/' }) }}
-                                                >
-                                                    <DeleteForeverIcon />
-                                                </IconButton>
-                                            </TableCell>
-                                            <TableCell align="right">{state.extra_data.vote_data[can_vote.vote]['name']}</TableCell>
-                                            <TableCell align="right">{state.extra_data.vote_data[can_vote.vote]['code']}</TableCell>
-                                            <TableCell align="right">{state.extra_data.voter_data[can_vote.voter]['email']}</TableCell>
-                                            <TableCell align="right">{state.extra_data.voter_data[can_vote.voter]['first_name']}</TableCell>
-                                            <TableCell align="right">{state.extra_data.voter_data[can_vote.voter]['last_name']}</TableCell>
+                }}
+                aria-describedby="alert-dialog-slide-description"
+            >
+                <DialogTitle>{"Uwaga"}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-slide-description">
+                        Czy na pewno chcesz usunąć wybrany element?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => {
+                        setState({ ...state, confirmDialogOpen: false });
+                    }}>Anuluj</Button>
+                    <Button onClick={handleConfirmClick}>Potwierdź</Button>
+                </DialogActions>
+            </Dialog>
+            <Container component="main" maxWidth="lg" sx={{ mb: 4 }}>
+                <Paper variant="outlined" sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
+                    {state?.extra_data ?
+                        (state.error != '') ?
+                            <Typography component="h1" variant="h5">
+                                Brak oczekujących próśb do dołączenia
+                            </Typography> :
+                            <TableContainer component={Paper}>
+                                <Table aria-label="collapsible table">
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell />
+                                            <TableCell />
+                                            <TableCell align="right">Nazwa</TableCell>
+                                            <TableCell align="right">Kod dostępu</TableCell>
+                                            <TableCell align="right">E-mail</TableCell>
+                                            <TableCell align="right">Imię</TableCell>
+                                            <TableCell align="right">Nazwisko</TableCell>
                                         </TableRow>
-                                    </React.Fragment>))}
-                        </Table>
-                    </TableContainer> : null
-                }
+                                    </TableHead>
+                                    {state.extra_data.can_vote.map((can_vote) => (
+                                        <React.Fragment>
+                                            <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+                                                <TableCell>
+                                                    <IconButton
+                                                        aria-label="add"
+                                                        size="small"
+                                                        id="1"
+                                                        name={can_vote.id}
+                                                        onClick={((e) => acceptRequest(can_vote.id))}
+                                                    >
+                                                        <PersonAddIcon />
+                                                    </IconButton>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <IconButton
+                                                        aria-label="delete"
+                                                        size="small"
+                                                        id="1"
+                                                        name={can_vote.id}
+                                                        onClick={() => { setState({ ...state, confirmDialogOpen: true, toDeleteId: can_vote.id, toDeleteURL: '/api/can-vote/' }) }}
+                                                    >
+                                                        <DeleteForeverIcon />
+                                                    </IconButton>
+                                                </TableCell>
+                                                <TableCell align="right">{state.extra_data.vote_data[can_vote.vote]['name']}</TableCell>
+                                                <TableCell align="right">{state.extra_data.vote_data[can_vote.vote]['code']}</TableCell>
+                                                <TableCell align="right">{state.extra_data.voter_data[can_vote.voter]['email']}</TableCell>
+                                                <TableCell align="right">{state.extra_data.voter_data[can_vote.voter]['first_name']}</TableCell>
+                                                <TableCell align="right">{state.extra_data.voter_data[can_vote.voter]['last_name']}</TableCell>
+                                            </TableRow>
+                                        </React.Fragment>))}
+                                </Table>
+                            </TableContainer> : null
+                    }
 
-            </Paper>
-        </Container>
-    </div>;
-};
+                </Paper>
+            </Container>
+        </div>;
+    };
 
-export default PendingRequests;
+    export default PendingRequests;
 
