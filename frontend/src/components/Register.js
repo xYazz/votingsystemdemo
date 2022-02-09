@@ -273,7 +273,6 @@ export default function SignUp() {
 		let errorsum = false
 		for (const [key, value] of Object.entries(formData)) {
 
-			console.log(value == '')
 			if (key.slice(-4) == "_err") {
 				if (value != undefined) {
 					errorstring += value;
