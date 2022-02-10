@@ -13,7 +13,9 @@ import axiosInstance from '../axios';
 import { Link } from "react-router-dom";
 import Button from "@mui/material/Button";
 import Stack from '@mui/material/Stack';
-import { Paper } from '@mui/material';
+import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+import SpinStretch from "react-cssfx-loading/lib/SpinStretch";
 
 const useStyles = makeStyles((theme) => ({
 	cardMedia: {
@@ -46,14 +48,15 @@ class Votes extends React.Component {
 	constructor() {
 		super()
 		this.state = {
-			votes: [], toUrl: '/vote/'
+			votes: [], toUrl: '/vote/',
+			loading: true,
 		}
 	}
 
 	getCurrentVotes = () => {
 		axiosInstance("api/votes")
 			.then((response) => {
-				this.setState({ ...this.state, votes: response.data, toUrl: '/vote' });
+				this.setState({ ...this.state, votes: response.data, toUrl: '/vote', loading: false });
 			}).catch(error => {
 				console.log(error)
 			})
@@ -78,61 +81,64 @@ class Votes extends React.Component {
 	render() {
 		const { classes } = this.props;
 		return (<div>
-			{this.state?.votes?.length > 0 ? <React.Fragment>
-				<Stack spacing={2} direction="row" justifyContent={"center"} marginTop={1/10} marginBottom={1/10}>
-					<Button color="primary" variant="contained" onClick={this.getCurrentVotes}>
-						Trwające głosowania
-					</Button>
-					<Button color="secondary" variant="contained" onClick={this.getFinishedVotes}>
-						Zakończone głosowania
-					</Button>
-				</Stack>
-				<Container maxWidth="md" component="main" display='flex' >
-				<Paper elevation={16} sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
-					<Grid container spacing={5} alignItems="flex-end" >
-						{this.state.votes.map((vote) => {
-							return (
-								// Enterprise card is full width at sm breakpoint
-								<Grid item key={vote.id} xs={12} md={3}>
-									<Card className={classes.card}>
-										<CardMedia
-											className={classes.cardMedia}
-										/>
-										<CardActionArea onClick={() => { this.props.history.push(this.state.toUrl, { vote_id: vote.id }) }}>
-											<CardContent className={classes.cardContent}>
-												<Typography
-													gutterBottom
-													variant="h6"
-													component="h2"
-													className={classes.voteTitle}
-												>
-													{vote.name}...
-												</Typography>
-												<div className={classes.voteText}>
-													<Typography color="textSecondary">
-														{vote.description}...
-													</Typography>
-												</div>
-											</CardContent>
-										</CardActionArea>
-									</Card>
-								</Grid>
-							);
-						})}
-					</Grid>
-					</Paper>
-				</Container>
-			</React.Fragment> :
-				<Container component="main" maxWidth="sm" marginTop={1/10} sx={{ mb: 4 }}>
+			<Container maxWidth="md" component="main" display='flex' >
+				{this.state.loading ? <Box mt={5} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}><Box style={{
+					position: 'flex',
+					alignSelf: 'center',
+					justifyContent: 'center'
+				}} mt={5}><SpinStretch color="#A9A9A9" width="100px" height="100px" duration="1s" /></Box></Box> : (
 					<Paper elevation={16} sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
-						<Typography component="h1" variant="h5">
-							Brak głosowań do wyświetlenia.
-						</Typography>
-					</Paper>
-				</Container>
-			}
+						{this.state?.votes?.length > 0 ?
+							<React.Fragment>
+										<Stack spacing={2} direction="row" justifyContent={"center"} mb={3} mt={3}>
+											<Button color="primary" variant="contained" onClick={this.getCurrentVotes}>
+												Trwające głosowania
+											</Button>
+											<Button color="secondary" variant="contained" onClick={this.getFinishedVotes}>
+												Zakończone głosowania
+											</Button>
+										</Stack>
+								<Grid container spacing={5} alignItems="flex-end">
+									{this.state.votes.map((vote) => {
+										return (
+											// Enterprise card is full width at sm breakpoint
+											<Grid item key={vote.id} xs={12} md={3}>
+												<Card className={classes.card}>
+													<CardMedia
+														className={classes.cardMedia}
+													/>
+													<CardActionArea onClick={() => { this.props.history.push(this.state.toUrl, { vote_id: vote.id }) }}>
+														<CardContent className={classes.cardContent}>
+															<Typography
+																gutterBottom
+																variant="h6"
+																component="h2"
+																className={classes.voteTitle}
+															>
+																{vote.name}...
+															</Typography>
+															<div className={classes.voteText}>
+																<Typography color="textSecondary">
+																	{vote.description}...
+																</Typography>
+															</div>
+														</CardContent>
+													</CardActionArea>
+												</Card>
+											</Grid>
+										);
+									})}
+								</Grid>
+							</React.Fragment>:
+							<Container component="main" maxWidth="sm" marginTop={1 / 10} sx={{ mb: 4 }}>
+								<Typography component="h1" variant="h5">
+									Brak głosowań do wyświetlenia.
+								</Typography>
+							</Container>}
+					</Paper>)}
+			</Container>
 		</div>
 		);
 	}
 };
-export default withStyles(useStyles)(Votes);;
+export default withStyles(useStyles)(Votes);
