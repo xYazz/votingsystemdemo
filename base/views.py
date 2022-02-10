@@ -107,7 +107,7 @@ class CreateVoteView(APIView):
             max_votes = serializer.data.get('max_votes')
             start_date = serializer.data.get('start_date')
             end_date = serializer.data.get('end_date')
-            print(serializer.data.get('private'))
+            print(serializer.data.get('start_date'))
             private = serializer.data.get('private')
             # queryset = Votes.objects.filter(name=name)
             # if queryset.exists():

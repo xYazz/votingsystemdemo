@@ -79,8 +79,8 @@ const CreateVotePage = () => {
         type: 5,
         name: "Wybory ogólne",
         description: "Wybory bez specyficznych kryteriów, każda osoba może zagłosować.",
-        start_date: moment().format("YYYY-MM-DD" + "T" + "hh:mm:ss"),
-        end_date: moment().format("YYYY-MM-DD" + "T" + "hh:mm:ss"),
+        start_date: moment().format("YYYY-MM-DD"+"T"+"hh:mm:ss"+"Z"),
+        end_date: moment().format("YYYY-MM-DD"+"T"+"hh:mm:ss"+"Z"),
         max_votes: 2,
         private: 'False',
     });
@@ -108,7 +108,9 @@ const CreateVotePage = () => {
             }).catch(error => {
                 console.log(error)
             })
-                .then((res) => history.push("/add_candidate", { vote_id: res.data.id }));
+                .then((res) => //history.push("/add_candidate", { vote_id: res.data.id })
+                console.log(res)
+                );
 
         } else {
             promptResponse(enqueueSnackbar, validation, 'error');
