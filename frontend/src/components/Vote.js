@@ -16,6 +16,8 @@ import Button from "@mui/material/Button";
 import Stack from '@mui/material/Stack';
 import axiosInstance from '../axios';
 import jwtDecode from 'jwt-decode';
+import { Container } from '@material-ui/core';
+import { Paper } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
 	cardMedia: {
