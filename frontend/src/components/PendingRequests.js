@@ -35,7 +35,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { useState } from 'react';
 import { promptResponse } from './AddCandidates';
 import { useSnackbar } from 'notistack';
-import { Puff } from 'react-loader-spinner';
+import SpinStretch from "react-cssfx-loading/lib/SpinStretch";
 
 const vote_type = {
     1: 'Wybory prezydenckie',
@@ -136,7 +136,7 @@ function PendingRequests() {
         <Container component="main" maxWidth="lg" sx={{ mb: 4 }}>
             {state.loading?<Box mt={5} style={{display: 'flex', justifyContent: 'center', alignItems:'center'}}><Box style={{position: 'flex',
                 alignSelf: 'center',
-                justifyContent: 'center'}} mt={5}><Puff color="#A9A9A9" height={80} width={80} margin="auto"/></Box></Box>:
+                justifyContent: 'center'}} mt={5}><SpinStretch color="#A9A9A9" width="100px" height="100px" duration="1s" /></Box></Box>:
                 <Paper elevation={16} sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
                 {state?.extra_data ?
                     <TableContainer component={Paper}>
