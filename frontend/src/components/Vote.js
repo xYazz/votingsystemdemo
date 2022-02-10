@@ -188,4 +188,4 @@ class Vote extends Component {
     }
 }
 
-export default withStyles(useStyles)(Vote);
+export default (Vote);
