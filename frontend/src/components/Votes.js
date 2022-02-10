@@ -54,7 +54,7 @@ class Votes extends React.Component {
 	}
 
 	getCurrentVotes = () => {
-		axiosInstance("api/votes")
+		axiosInstance("api/votes/")
 			.then((response) => {
 				this.setState({ ...this.state, votes: response.data, toUrl: '/vote', loading: false });
 			}).catch(error => {
