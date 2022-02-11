@@ -41,12 +41,16 @@ class EndedVoteList(APIView):
     serializer_class = VoteSerializer
 
     def get(self, request, format=None):
+        user = get_user(request)
         votes = Vote.objects.filter(end_date__lt=datetime.datetime.now(tz=timezone.utc))
+        public = votes.exclude(private=False)
+        private = votes.filter(private=True, id__in= CanVote.objects.filter(voter=user, can_vote=True).values_list('vote', flat=True))
+        available = public | private
         response = []
-        serializer = VoteSerializer(votes, many=True).data
+        serializer = VoteSerializer(available, many=True).data
         for vote in serializer:
             try:
-                voted_times = VoteVoter.objects.filter(vote=vote).count()
+                voted_times = VoteVoter.objects.filter(vote__id=vote['id']).count()
                 if vote['candidates'] and voted_times > 0:
                     new_candidates = []
                     for candidate in vote['candidates']:
