@@ -5,17 +5,12 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import Container from '@mui/material/Container';
 import { withStyles } from "@material-ui/core/styles";
 import { CardActionArea, CardHeader } from '@material-ui/core';
 import { Redirect } from 'react-router';
 import axiosInstance from '../axios';
 import { Link } from "react-router-dom";
-import Button from "@mui/material/Button";
-import Stack from '@mui/material/Stack';
-import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
-import { Paper, Paper } from '@mui/material';
+import { Paper, Box, Stack , Button , Container } from '@mui/material';
 import SpinStretch from "react-cssfx-loading/lib/SpinStretch";
 
 const useStyles = makeStyles((theme) => ({
