@@ -20,13 +20,21 @@ import {
     ArgumentAxis,
     ValueAxis,
     Tooltip,
+    Legend,
 } from '@devexpress/dx-react-chart-material-ui';
-import { Animation, EventTracker } from '@devexpress/dx-react-chart';
+import { Stack, Animation, EventTracker } from '@devexpress/dx-react-chart';
 
 const donutData = [
     { label: "<5", value: 21 },
     { label: "5-9", value: 35 },
 ]
+
+const Root = props => (
+    <Legend.Root {...props} sx={{ display: 'flex', margin: 'auto', flexDirection: 'row' }} />
+);
+const Label = props => (
+    <Legend.Label {...props} sx={{ whiteSpace: 'nowrap' }} />
+);
 
 const choices = [
     "Edukacja",
@@ -55,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Results = (props) => {
-    const [state, setState] = useState({loading: true});
+    const [state, setState] = useState({ loading: true });
     const [choiceData, setChoiceData] = useState();
     const history = useHistory;
 
@@ -67,7 +75,7 @@ const Results = (props) => {
                 results: JSON.parse(response.data.result),
                 detail_id: 0,
                 detail_view: false,
-                loading:false,
+                loading: false,
             });
         });
     }
@@ -109,86 +117,88 @@ const Results = (props) => {
     const classes = useStyles();
 
     return <div>
-            <Container component="main" maxWidth="xl" sx={{ mb: 4 }}>
-            {state?.loading?<LoadingPage />:
+        <Container component="main" maxWidth="xl" sx={{ mb: 4 }}>
+            {state?.loading ? <LoadingPage /> :
                 <React.Fragment>
                     {console.log(state),
-                    console.log(state.results),
-                    console.log(state.results['Edukacja'])
+                        console.log(state.results),
+                        console.log(state.results['Edukacja'])
                     }
-                <form className={classes.form} noValidate>
-                    <Container component="main" maxWidth="xs" sx={{ mb: 2 }}>
-                        <Grid container spacing={2}>
-                            <Grid item xs={12} align="center">
-                                <Typography component='h4' variant='h4'>
-                                    Przegląd wyników
-                                </Typography>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    variant="outlined"
-                                    required
-                                    select
-                                    fullWidth
-                                    label="Kandydat"
-                                    name="candidate"
-                                    onChange={handleChange}
-                                >
-                                    <MenuItem key={0} value={0}>
-                                        {"Ogólny wynik"}
-                                    </MenuItem>
-                                    {state.results['Kandydaci'].map((candidate) => (
-                                        <MenuItem key={candidate.id} value={candidate.id}>
-                                            {candidate.label}
-                                        </MenuItem>
-                                    ))}
-                                </TextField>
-                            </Grid>
-                            {state.detail_view ?
+                    <form className={classes.form} noValidate>
+                        <Container component="main" maxWidth="xs" sx={{ mb: 2 }}>
+                            <Grid container spacing={2}>
+                                <Grid item xs={12} align="center">
+                                    <Typography component='h4' variant='h4'>
+                                        Przegląd wyników
+                                    </Typography>
+                                </Grid>
                                 <Grid item xs={12}>
                                     <TextField
                                         variant="outlined"
                                         required
                                         select
                                         fullWidth
-                                        label="Statystyka"
-                                        name="choices"
-                                        onChange={handleChangeChoice}
+                                        label="Kandydat"
+                                        name="candidate"
+                                        onChange={handleChange}
                                     >
-                                        {choices.map((choice) => (
-                                            <MenuItem key={choice} value={choice}>
-                                                {choice}
+                                        <MenuItem key={0} value={0}>
+                                            {"Ogólny wynik"}
+                                        </MenuItem>
+                                        {state.results['Kandydaci'].map((candidate) => (
+                                            <MenuItem key={candidate.id} value={candidate.id}>
+                                                {candidate.label}
                                             </MenuItem>
                                         ))}
                                     </TextField>
-                                </Grid>:null}
-                        </Grid>
-                    </Container>
-                </form>
-                {choiceData?
-                    <Chart
-                        data={choiceData}
-                    >
-                        <ArgumentAxis />
-                        <ValueAxis />
+                                </Grid>
+                                {state.detail_view ?
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            variant="outlined"
+                                            required
+                                            select
+                                            fullWidth
+                                            label="Statystyka"
+                                            name="choices"
+                                            onChange={handleChangeChoice}
+                                        >
+                                            {choices.map((choice) => (
+                                                <MenuItem key={choice} value={choice}>
+                                                    {choice}
+                                                </MenuItem>
+                                            ))}
+                                        </TextField>
+                                    </Grid> : null}
+                            </Grid>
+                        </Container>
+                    </form>
+                    {choiceData ?
+                        <Chart
+                            data={choiceData}
+                        >
+                            <ArgumentAxis />
+                            <ValueAxis />
 
-                        <BarSeries
-                            valueField="value"
-                            argumentField="label"
-                            name="name"
-                            color="#ffaa66"
-                        />
-                        <Title text="Statystyki" />
+                            <BarSeries
+                                valueField="value"
+                                argumentField="label"
+                                name="label"
+                                color="#ffaa66"
+                            />
+                            <Title text="Statystyki" />
 
-                        <Animation />
-                        <EventTracker />
-                        <Tooltip />
-                    </Chart>
-                    : null}
-                    </React.Fragment>}
-            </Container>
-            </div>
-    
+                            <Animation />
+                            <Legend position="bottom" rootComponent={Root} labelComponent={Label} />
+                            <Stack />
+                            <EventTracker />
+                            <Tooltip />
+                        </Chart>
+                        : null}
+                </React.Fragment>}
+        </Container>
+    </div>
+
 };
 //<div><PieChart data={candidateData} outerRadius={200} innerRadius={100} /></div>
 export default Results;
