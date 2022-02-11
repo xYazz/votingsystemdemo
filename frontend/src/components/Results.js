@@ -13,34 +13,24 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import MenuItem from '@material-ui/core/MenuItem';
-import {
-    Chart,
-    BarSeries,
-    Title,
-    ArgumentAxis,
-    ValueAxis,
-    Tooltip,
-    Legend,
-} from '@devexpress/dx-react-chart-material-ui';
-import { Stack, Animation, EventTracker } from '@devexpress/dx-react-chart';
-
-const donutData = [
-    { label: "<5", value: 21 },
-    { label: "5-9", value: 35 },
-]
-
-const Root = props => (
-    <Legend.Root {...props} sx={{ display: 'flex', margin: 'auto', flexDirection: 'row' }} />
-);
-const Label = props => (
-    <Legend.Label {...props} sx={{ whiteSpace: 'nowrap' }} />
-);
+// import {
+//     Chart,
+//     BarSeries,
+//     Title,
+//     ArgumentAxis,
+//     ValueAxis,
+//     Tooltip,
+//     Legend,
+// } from '@devexpress/dx-react-chart-material-ui';
+// import { Stack, Animation, EventTracker } from '@devexpress/dx-react-chart';
+import { Chart, Series, Tooltip, Label, ArgumentAxis, Legend } from 'devextreme-react/chart'
 
 const choices = [
     "Edukacja",
     "Status społeczny",
     "Miejsce zamieszkania",
 ]
+
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -109,7 +99,12 @@ const Results = (props) => {
             )
         }
     }
+    let i = 0
+    const Label = props => (
+        console.log(props),
 
+        <Legend.Label text="test" sx={{ whiteSpace: 'nowrap' }} />
+    );
     useEffect(() => {
         getData();
     }, []);
@@ -174,27 +169,22 @@ const Results = (props) => {
                         </Container>
                     </form>
                     {choiceData ?
-                        <Chart
-                            data={choiceData}
+                        (<Chart
+                            dataSource={choiceData}
                         >
-                            <ArgumentAxis />
-                            <ValueAxis />
-
-                            <BarSeries
+                            <Series
                                 valueField="value"
                                 argumentField="label"
-                                name="label"
-                                color="#ffaa66"
+                                type="bar"
+                                overlappingBehavior={'stagger'}
                             />
-                            <Title text="Statystyki" />
+                            <Legend visible={false} />
 
-                            <Animation />
-                            <Legend position="bottom" rootComponent={Root} labelComponent={Label} />
-                            <Stack />
-                            <EventTracker />
-                            <Tooltip />
+                            <Tooltip
+                                enabled={true}
+                            />
                         </Chart>
-                        : null}
+                        ) : null}
                 </React.Fragment>}
         </Container>
     </div>
