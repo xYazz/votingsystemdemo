@@ -64,7 +64,7 @@ const Results = (props) => {
         axiosInstance('/api/results/' + props.location.state.vote_id).then((response) => {
             setState({
                 ...state,
-                results: eval(JSON.stringify(response.data.result)),
+                results: JSON.parse(response.data.result),
                 detail_id: 0,
                 detail_view: false,
                 loading:false,
