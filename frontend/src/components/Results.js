@@ -1,5 +1,5 @@
 import React, { Component, useEffect, useState } from "react";
-
+import LoadingPage from "./LoadingPage";
 import rd3 from 'react-d3-library';
 import PieChart from "./PieChart";
 const RD3Component = rd3.Component;
@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Results = (props) => {
-    const [state, setState] = useState();
+    const [state, setState] = useState({loading: true});
     const [choiceData, setChoiceData] = useState();
     const history = useHistory;
 
@@ -67,6 +67,7 @@ const Results = (props) => {
                 results: response.data.result,
                 detail_id: 0,
                 detail_view: false,
+                loading:false,
             });
         });
     }
@@ -107,9 +108,10 @@ const Results = (props) => {
 
     const classes = useStyles();
 
-    return <React.Fragment>{
-        state ?
+    return <div>
             <Container component="main" maxWidth="xl" sx={{ mb: 4 }}>
+            {state?.loading?<LoadingPage />:
+                <React.Fragment>
                 <form className={classes.form} noValidate>
                     <Container component="main" maxWidth="xs" sx={{ mb: 2 }}>
                         <Grid container spacing={2}>
@@ -155,13 +157,11 @@ const Results = (props) => {
                                             </MenuItem>
                                         ))}
                                     </TextField>
-                                </Grid> : null
-                            }
+                                </Grid>:null}
                         </Grid>
                     </Container>
                 </form>
-                {console.log(state)}
-                {choiceData ?
+                {choiceData?
                     <Chart
                         data={choiceData}
                     >
@@ -179,9 +179,10 @@ const Results = (props) => {
                         <Tooltip />
                     </Chart>
                     : null}
-            </Container> : <PageNotFound />
-
-    }</React.Fragment>;
+                    </React.Fragment>}
+            </Container>
+            </div>
+    
 };
 //<div><PieChart data={candidateData} outerRadius={200} innerRadius={100} /></div>
 export default Results;

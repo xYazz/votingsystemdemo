@@ -19,8 +19,8 @@ import jwt
 from project import settings
 # Create your views here.
 
-def get_user(request):
-    return CustomUser.objects.get(id=(jwt.decode(request.headers['Authorization'][4:], settings.SECRET_KEY, algorithms=['HS256']))['user_id'])
+def get_user(req):
+    return CustomUser.objects.get(id=(jwt.decode(req.headers['Authorization'][4:], settings.SECRET_KEY, algorithms=['HS256']))['user_id'])
 
 class VoteList(APIView):
     http_method_names = ['get', 'head']
@@ -45,12 +45,16 @@ class EndedVoteList(APIView):
         response = []
         serializer = VoteSerializer(votes, many=True).data
         for vote in serializer:
-            if vote['candidates']:
-                new_candidates = []
-                for candidate in vote['candidates']:
-                    new_candidates.append(dict(candidate))
-                vote['candidates']=new_candidates
-                response.append(dict(vote))
+            try:
+                VoteVoter.objects.filter(vote=vote)
+                if vote['candidates']:
+                    new_candidates = []
+                    for candidate in vote['candidates']:
+                        new_candidates.append(dict(candidate))
+                    vote['candidates']=new_candidates
+                    response.append(dict(vote))
+            except ObjectDoesNotExist:
+                pass
         
         return Response(response)
 
@@ -117,7 +121,6 @@ class CreateVoteView(APIView):
             #     return Response(VotesSerializer(vote).data, status=status.HTTP_202_ACCEPTED)
             # else:
             vote = Vote(type=type, name=name, description=description, max_votes=max_votes, start_date=start_date, end_date=end_date, owner=user, private=private)
-            print(VoteSerializer(vote).data)
             vote.save()
             return Response(DisplayVoteSerializer(vote).data, status=status.HTTP_201_CREATED)
         return Response({'Bad Request': 'Invalid Data...'}, status=status.HTTP_400_BAD_REQUEST)
