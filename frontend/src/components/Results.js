@@ -112,6 +112,7 @@ const Results = (props) => {
             <Container component="main" maxWidth="xl" sx={{ mb: 4 }}>
             {state?.loading?<LoadingPage />:
                 <React.Fragment>
+                    {console.log(state)}
                 <form className={classes.form} noValidate>
                     <Container component="main" maxWidth="xs" sx={{ mb: 2 }}>
                         <Grid container spacing={2}>
