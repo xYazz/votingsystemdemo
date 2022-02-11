@@ -311,7 +311,7 @@ class Results(APIView):
                     results["Kandydaci"].append({"label": candidate["first_name"] + " " + candidate["last_name"], "value": 0, "id": candidate['id']}) 
 
             
-            result = VoteResult(vote=vote, result=results)
+            result = VoteResult(vote=vote, result=json.dumps(results))
             result.save()
             return Response(VoteResultSerializer(result).data, status=status.HTTP_201_CREATED)
             return Response(VoteResultSerializer(result).data, status=status.HTTP_200_OK)
