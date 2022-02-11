@@ -19,6 +19,7 @@ import jwtDecode from 'jwt-decode';
 import { Container } from '@material-ui/core';
 import Paper from '@mui/material/Paper';
 import SpinStretch from "react-cssfx-loading/lib/SpinStretch";
+import LoadingPage from './LoadingPage';
 
 const useStyles = makeStyles(() => ({
 	cardMedia: {
@@ -138,11 +139,7 @@ class Vote extends Component {
 		const { classes } = this.props;
 		return <div>
 			<Container maxWidth="md" component="main" sx={{ mb: 4 }}>
-				{this.state.loading ? <Box mt={5} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}><Box style={{
-					position: 'flex',
-					alignSelf: 'center',
-					justifyContent: 'center'
-				}} mt={5}><SpinStretch color="#A9A9A9" width="100px" height="100px" duration="1s" /></Box></Box> :
+				{this.state.loading ? <LoadingPage />:
 					(<Paper elevation={16} sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
 						<h3>{this.name}</h3>
 						<p>Rodzaj głosowania: {this.state.type}</p>

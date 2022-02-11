@@ -134,9 +134,7 @@ function PendingRequests() {
             </DialogActions>
         </Dialog>
         <Container component="main" maxWidth="lg" sx={{ mb: 4 }}>
-            {state.loading?<Box mt={5} style={{display: 'flex', justifyContent: 'center', alignItems:'center'}}><Box style={{position: 'flex',
-                alignSelf: 'center',
-                justifyContent: 'center'}} mt={5}><SpinStretch color="#A9A9A9" width="100px" height="100px" duration="1s" /></Box></Box>:
+            {state.loading?<LoadingPage />:
                 <Paper elevation={16} sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
                 {state?.extra_data ?
                     <TableContainer component={Paper}>

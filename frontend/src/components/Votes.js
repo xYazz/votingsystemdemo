@@ -12,6 +12,7 @@ import axiosInstance from '../axios';
 import { Link } from "react-router-dom";
 import { Paper, Box, Stack , Button , Container } from '@mui/material';
 import SpinStretch from "react-cssfx-loading/lib/SpinStretch";
+import LoadingPage from './LoadingPage';
 
 const useStyles = makeStyles((theme) => ({
 	cardMedia: {
@@ -78,11 +79,7 @@ class Votes extends React.Component {
 		const { classes } = this.props;
 		return (<div>
 			<Container maxWidth="md" component="main" display='flex' >
-				{this.state.loading ? <Box mt={5} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}><Box style={{
-					position: 'flex',
-					alignSelf: 'center',
-					justifyContent: 'center'
-				}} mt={5}><SpinStretch color="#A9A9A9" width="100px" height="100px" duration="1s" /></Box></Box> : (
+				{this.state.loading ? <LoadingPage />: (
 					<Paper elevation={16} sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
 						<Stack spacing={2} direction="row" justifyContent={"center"} mb={3} mt={3}>
 											<Button color="primary" variant="contained" onClick={this.getCurrentVotes}>
