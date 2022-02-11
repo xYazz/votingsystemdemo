@@ -46,8 +46,8 @@ class EndedVoteList(APIView):
         serializer = VoteSerializer(votes, many=True).data
         for vote in serializer:
             try:
-                VoteVoter.objects.filter(vote=vote)
-                if vote['candidates']:
+                voted_times = VoteVoter.objects.filter(vote=vote).count()
+                if vote['candidates'] and voted_times > 0:
                     new_candidates = []
                     for candidate in vote['candidates']:
                         new_candidates.append(dict(candidate))

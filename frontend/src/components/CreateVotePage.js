@@ -108,8 +108,7 @@ const CreateVotePage = () => {
             }).catch(error => {
                 console.log(error)
             })
-                .then((res) => //history.push("/add_candidate", { vote_id: res.data.id })
-                console.log(res)
+                .then((res) => history.push("/add_candidate", { vote_id: res.data.id })
                 );
 
         } else {
