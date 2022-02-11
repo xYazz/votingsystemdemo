@@ -265,11 +265,8 @@ class Results(APIView):
             #     result=VoteResult.objects.get(vote=vote)
             # except ObjectDoesNotExist:   
             results = {'Edukacja': {}, 'Miejsce zamieszkania':{},'Status społeczny':{}, 'Kandydaci': []}
-            print(CustomUserSerializer(CustomUser.objects.get(id=2)).data)
-            print(CustomUserSerializer(CustomUser.objects.get(id=3)).data)
             vote_voters = VoteVoter.objects.filter(vote=vote)
             sum = len(vote_voters)
-            voter = VoteVoter.objects.values('voter').annotate(weight=Count('voter')).order_by()
             
             for candidate in VoteSerializer(vote).data['candidates']:
                 results['Edukacja'][candidate['id']]= []
@@ -285,7 +282,7 @@ class Results(APIView):
                         /len(vote_voters.filter(candidate=get_candidate)
                         )*100, 2)})
                         
-                    except (ZeroDivisionError, IndexError) as e:
+                    except (ZeroDivisionError, IndexError, ObjectDoesNotExist) as e:
                         results['Edukacja'][candidate['id']].append({"label": CustomUser.Education.labels[idx], "value": 0})
 
                     if idx < (len(CustomUser.PlaceOfResidence.labels)):
@@ -295,7 +292,7 @@ class Results(APIView):
                             /len(vote_voters.filter(candidate=get_candidate)
                             )*100, 2)})
                             
-                        except (ZeroDivisionError, IndexError) as e:
+                        except (ZeroDivisionError, IndexError, ObjectDoesNotExist) as e:
                             results['Miejsce zamieszkania'][candidate['id']].append({"label": CustomUser.PlaceOfResidence.labels[idx], "value": 0})
 
                     if idx < (len(CustomUser.Status.labels)):
@@ -305,7 +302,7 @@ class Results(APIView):
                             /len(vote_voters.filter(candidate=get_candidate)
                             )*100, 2))})
                             
-                        except (ZeroDivisionError, IndexError) as e:
+                        except (ZeroDivisionError, IndexError, ObjectDoesNotExist) as e:
                             results['Status społeczny'][candidate['id']].append({"label": CustomUser.Status.labels[idx], "value": 0})
                 try:      
                     results['Kandydaci'].append({"label": candidate['first_name'] + " " + candidate['last_name'], "value": round(len(vote_voters.filter(candidate=get_candidate))/sum*100, 2), "id": candidate['id']}) 
