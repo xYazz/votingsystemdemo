@@ -1,4 +1,5 @@
 import datetime
+import json
 from django.utils import timezone
 from django.db.models import Count
 from django.core.exceptions import ObjectDoesNotExist
@@ -264,53 +265,53 @@ class Results(APIView):
             # try:
             #     result=VoteResult.objects.get(vote=vote)
             # except ObjectDoesNotExist:   
-            results = {'Edukacja': {}, 'Miejsce zamieszkania':{},'Status społeczny':{}, 'Kandydaci': []}
+            results = {"Edukacja": {}, "Miejsce zamieszkania":{},"Status społeczny":{}, "Kandydaci": []}
             vote_voters = VoteVoter.objects.filter(vote=vote)
             sum = len(vote_voters)
             
             for candidate in VoteSerializer(vote).data['candidates']:
-                results['Edukacja'][candidate['id']]= []
+                results["Edukacja"][candidate['id']]= []
                 
-                results['Miejsce zamieszkania'][candidate['id']]= []
-                results['Status społeczny'][candidate['id']]=[]
+                results["Miejsce zamieszkania"][candidate['id']]= []
+                results["Status społeczny"][candidate['id']]=[]
                 
                 get_candidate = Candidate.objects.get(id=candidate['id'])
                 for idx, stat in enumerate(CustomUser.Education.labels):
                     try: 
-                        results['Edukacja'][candidate['id']].append({"label": CustomUser.Education.labels[idx], "value": round(
+                        results["Edukacja"][candidate['id']].append({"label": CustomUser.Education.labels[idx], "value": round(
                         len(vote_voters.filter(candidate=get_candidate, voter__in=CustomUser.objects.filter(education=idx+1)))
                         /len(vote_voters.filter(candidate=get_candidate)
                         )*100, 2)})
                         
                     except (ZeroDivisionError, IndexError, ObjectDoesNotExist) as e:
-                        results['Edukacja'][candidate['id']].append({"label": CustomUser.Education.labels[idx], "value": 0})
+                        results["Edukacja"][candidate['id']].append({"label": CustomUser.Education.labels[idx], "value": 0})
 
                     if idx < (len(CustomUser.PlaceOfResidence.labels)):
                         try: 
-                            results['Miejsce zamieszkania'][candidate['id']].append({"label": CustomUser.PlaceOfResidence.labels[idx], "value":round(
+                            results["Miejsce zamieszkania"][candidate['id']].append({"label": CustomUser.PlaceOfResidence.labels[idx], "value":round(
                             len(vote_voters.filter(candidate=get_candidate, voter__in=CustomUser.objects.filter(place_of_residence=idx+1)))
                             /len(vote_voters.filter(candidate=get_candidate)
                             )*100, 2)})
                             
                         except (ZeroDivisionError, IndexError, ObjectDoesNotExist) as e:
-                            results['Miejsce zamieszkania'][candidate['id']].append({"label": CustomUser.PlaceOfResidence.labels[idx], "value": 0})
+                            results["Miejsce zamieszkania"][candidate['id']].append({"label": CustomUser.PlaceOfResidence.labels[idx], "value": 0})
 
                     if idx < (len(CustomUser.Status.labels)):
                         try: 
-                            results['Status społeczny'][candidate['id']].append({"label": CustomUser.Status.labels[idx], "value": (round(
+                            results["Status społeczny"][candidate['id']].append({"label": CustomUser.Status.labels[idx], "value": (round(
                             len(vote_voters.filter(candidate=get_candidate, voter__in=CustomUser.objects.filter(place_of_residence=idx+1)))
                             /len(vote_voters.filter(candidate=get_candidate)
                             )*100, 2))})
                             
                         except (ZeroDivisionError, IndexError, ObjectDoesNotExist) as e:
-                            results['Status społeczny'][candidate['id']].append({"label": CustomUser.Status.labels[idx], "value": 0})
+                            results["Status społeczny"][candidate['id']].append({"label": CustomUser.Status.labels[idx], "value": 0})
                 try:      
-                    results['Kandydaci'].append({"label": candidate['first_name'] + " " + candidate['last_name'], "value": round(len(vote_voters.filter(candidate=get_candidate))/sum*100, 2), "id": candidate['id']}) 
+                    results["Kandydaci"].append({"label": candidate["first_name"] + " " + candidate["last_name"], "value": round(len(vote_voters.filter(candidate=get_candidate))/sum*100, 2), "id": candidate['id']}) 
                 except ZeroDivisionError:
-                    results['Kandydaci'].append({"label": candidate['first_name'] + " " + candidate['last_name'], "value": 0, "id": candidate['id']}) 
+                    results["Kandydaci"].append({"label": candidate["first_name"] + " " + candidate["last_name"], "value": 0, "id": candidate['id']}) 
 
             
-            result = VoteResult(vote=vote, result=results)
+            result = VoteResult(vote=vote, result=json.dumps(results))
             result.save()
             return Response(VoteResultSerializer(result).data, status=status.HTTP_201_CREATED)
             return Response(VoteResultSerializer(result).data, status=status.HTTP_200_OK)

@@ -64,7 +64,7 @@ const Results = (props) => {
         axiosInstance('/api/results/' + props.location.state.vote_id).then((response) => {
             setState({
                 ...state,
-                results: response.data.result,
+                results: JSON.parse(JSON.stringify(response.data.result)),
                 detail_id: 0,
                 detail_view: false,
                 loading:false,
@@ -112,7 +112,10 @@ const Results = (props) => {
             <Container component="main" maxWidth="xl" sx={{ mb: 4 }}>
             {state?.loading?<LoadingPage />:
                 <React.Fragment>
-                    {console.log(state)}
+                    {console.log(state),
+                    console.log(state.results),
+                    console.log(state.results['Edukacja'])
+                    }
                 <form className={classes.form} noValidate>
                     <Container component="main" maxWidth="xs" sx={{ mb: 2 }}>
                         <Grid container spacing={2}>
