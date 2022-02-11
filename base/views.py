@@ -30,7 +30,7 @@ class VoteList(APIView):
         user = get_user(request)
         
         votes = Vote.objects.filter(end_date__gt=datetime.datetime.now(tz=timezone.utc), start_date__lt=datetime.datetime.now(tz=timezone.utc))
-        public = votes.exclude(private=False)
+        public = votes.filter(private=False)
         private = votes.filter(private=True, id__in= CanVote.objects.filter(voter=user, can_vote=True).values_list('vote', flat=True))
         available = public | private
         serializer = VoteSerializer(available, many=True)
@@ -43,7 +43,7 @@ class EndedVoteList(APIView):
     def get(self, request, format=None):
         user = get_user(request)
         votes = Vote.objects.filter(end_date__lt=datetime.datetime.now(tz=timezone.utc))
-        public = votes.exclude(private=False)
+        public = votes.filter(private=False)
         private = votes.filter(private=True, id__in= CanVote.objects.filter(voter=user, can_vote=True).values_list('vote', flat=True))
         available = public | private
         response = []
