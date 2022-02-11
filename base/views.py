@@ -48,19 +48,15 @@ class EndedVoteList(APIView):
         available = public | private
         response = []
         serializer = VoteSerializer(available, many=True).data
-        for vote in serializer:
-            try:
-                voted_times = VoteVoter.objects.filter(vote__id=vote['id']).count()
-                if vote['candidates'] and voted_times > 0:
-                    new_candidates = []
-                    for candidate in vote['candidates']:
-                        new_candidates.append(dict(candidate))
-                    vote['candidates']=new_candidates
-                    response.append(dict(vote))
-            except ObjectDoesNotExist:
-                pass
+        # for vote in serializer:
+        #     if vote['candidates']:
+        #         new_candidates = []
+        #         for candidate in vote['candidates']:
+        #             new_candidates.append(dict(candidate))
+        #         vote['candidates']=new_candidates
+        #         response.append(dict(vote))
         
-        return Response(response)
+        return Response(serializer)
 
 
 class VoteVoterList(APIView):
@@ -273,7 +269,6 @@ class Results(APIView):
             print(CustomUserSerializer(CustomUser.objects.get(id=3)).data)
             vote_voters = VoteVoter.objects.filter(vote=vote)
             sum = len(vote_voters)
-            print()
             voter = VoteVoter.objects.values('voter').annotate(weight=Count('voter')).order_by()
             
             for candidate in VoteSerializer(vote).data['candidates']:
