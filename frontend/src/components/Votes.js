@@ -5,7 +5,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { Container } from '@mui/material';
+import Container from '@mui/material/Container';
 import { withStyles } from "@material-ui/core/styles";
 import { CardActionArea, CardHeader } from '@material-ui/core';
 import { Redirect } from 'react-router';
@@ -15,6 +15,7 @@ import Button from "@mui/material/Button";
 import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
+import { Paper, Paper } from '@mui/material';
 import SpinStretch from "react-cssfx-loading/lib/SpinStretch";
 
 const useStyles = makeStyles((theme) => ({
@@ -88,9 +89,7 @@ class Votes extends React.Component {
 					justifyContent: 'center'
 				}} mt={5}><SpinStretch color="#A9A9A9" width="100px" height="100px" duration="1s" /></Box></Box> : (
 					<Paper elevation={16} sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
-						{this.state?.votes?.length > 0 ?
-							<React.Fragment>
-										<Stack spacing={2} direction="row" justifyContent={"center"} mb={3} mt={3}>
+						<Stack spacing={2} direction="row" justifyContent={"center"} mb={3} mt={3}>
 											<Button color="primary" variant="contained" onClick={this.getCurrentVotes}>
 												Trwające głosowania
 											</Button>
@@ -98,6 +97,8 @@ class Votes extends React.Component {
 												Zakończone głosowania
 											</Button>
 										</Stack>
+						{this.state?.votes?.length > 0 ?
+							<React.Fragment>
 								<Grid container spacing={5} alignItems="flex-end">
 									{this.state.votes.map((vote) => {
 										return (
