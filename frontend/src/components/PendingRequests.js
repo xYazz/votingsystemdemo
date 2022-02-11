@@ -36,6 +36,7 @@ import { useState } from 'react';
 import { promptResponse } from './AddCandidates';
 import { useSnackbar } from 'notistack';
 import SpinStretch from "react-cssfx-loading/lib/SpinStretch";
+import LoadingPage from './LoadingPage';
 
 const vote_type = {
     1: 'Wybory prezydenckie',
