@@ -175,6 +175,8 @@ const Results = (props) => {
                         <BarSeries
                             valueField="value"
                             argumentField="label"
+                            name="name"
+                            color="#ffaa66"
                         />
                         <Title text="Statystyki" />
 
