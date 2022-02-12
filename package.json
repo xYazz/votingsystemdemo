@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "postinstall": "npm install --prefix frontend",
-    "build": "webpack --mode production --config /frontend/webpack.config.js"
+    "build": "webpack --mode production --config ./frontend/webpack.config.js"
   },
   "engines": {
     "node": "14.18.1",
