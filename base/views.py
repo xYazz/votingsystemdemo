@@ -47,8 +47,8 @@ class EndedVoteList(APIView):
         public = votes.filter(private=False)
         private = votes.filter(private=True, id__in= CanVote.objects.filter(voter=user, can_vote=True).values_list('vote', flat=True))
         available = public | private
-        response = []
         serializer = VoteSerializer(available, many=True).data
+        # response = []
         # for vote in serializer:
         #     if vote['candidates']:
         #         new_candidates = []
