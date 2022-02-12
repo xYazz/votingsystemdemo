@@ -1,4 +1,5 @@
 import datetime
+
 import json
 from django.utils import timezone
 from django.db.models import Count
@@ -30,7 +31,7 @@ class VoteList(APIView):
     def get(self, request, format=None):
         user = get_user(request)
         
-        votes = Vote.objects.filter(end_date__gt=datetime.datetime.now(), start_date__lt=datetime.datetime.now())
+        votes = Vote.objects.filter(end_date__gt=timezone.now(), start_date__lt=timezone.now())
         public = votes.filter(private=False)
         private = votes.filter(private=True, id__in= CanVote.objects.filter(voter=user, can_vote=True).values_list('vote', flat=True))
         available = public
@@ -46,7 +47,7 @@ class EndedVoteList(APIView):
         votes = Vote.objects.filter(end_date__lt=datetime.datetime.now(tz=timezone.utc)).filter(id__in=Candidate.objects.all().values_list('vote', flat=True))
         public = votes.filter(private=False)
         private = votes.filter(private=True, id__in= CanVote.objects.filter(voter=user, can_vote=True).values_list('vote', flat=True))
-        available = public | private
+        available = public
         serializer = VoteSerializer(available, many=True).data
         # response = []
         # for vote in serializer:
