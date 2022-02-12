@@ -85,7 +85,7 @@ export default function SignIn() {
 			<div className={classes.paper}>
 				<Avatar className={classes.avatar}></Avatar>
 				<Typography component="h1" variant="h5">
-					Sign in
+					Logowanie
 				</Typography>
 				<form className={classes.form} noValidate>
 					<TextField
@@ -120,7 +120,7 @@ export default function SignIn() {
 						className={classes.submit}
 						onClick={handleSubmit}
 					>
-						Sign In
+						Zaloguj się
 					</Button>
 					<Grid container>
 						{/* <Grid item xs>
