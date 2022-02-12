@@ -24,7 +24,7 @@ def date():
     return timezone.now()+timezone.timedelta(days=1)
 
 class VoteResult(models.Model):
-    vote = ForeignKey("Vote", on_delete=models.PROTECT)
+    vote = ForeignKey("Vote", on_delete=CASCADE)
     result = JSONField()
 
 class Candidate(models.Model):
