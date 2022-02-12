@@ -33,7 +33,7 @@ class VoteList(APIView):
         votes = Vote.objects.filter(end_date__gt=datetime.datetime.now(), start_date__lt=datetime.datetime.now())
         public = votes.filter(private=False)
         private = votes.filter(private=True, id__in= CanVote.objects.filter(voter=user, can_vote=True).values_list('vote', flat=True))
-        available = public | private
+        available = public
         serializer = VoteSerializer(available, many=True)
         return Response(serializer.data)
 
