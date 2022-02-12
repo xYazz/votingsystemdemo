@@ -31,7 +31,7 @@ class VoteList(APIView):
     def get(self, request, format=None):
         user = get_user(request)
         
-        votes = Vote.objects.filter(end_date__gt=timezone.now()-datetime.timedelta(hours=1), start_date__lt=timezone.now()-datetime.timedelta(hours=1))
+        votes = Vote.objects.filter(end_date__gt=timezone.now()+datetime.timedelta(hours=1), start_date__lt=timezone.now()+datetime.timedelta(hours=1))
         public = votes.filter(private=False)
         private = votes.filter(private=True, id__in= CanVote.objects.filter(voter=user, can_vote=True).values_list('vote', flat=True))
         available = public
