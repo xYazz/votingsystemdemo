@@ -1,8 +1,5 @@
 import React, { Component, useEffect, useState } from "react";
 import LoadingPage from "./LoadingPage";
-import rd3 from 'react-d3-library';
-import PieChart from "./PieChart";
-const RD3Component = rd3.Component;
 import { useHistory } from "react-router-dom";
 import axiosInstance from "../axios";
 import PageNotFound from "./PageNotFound";
@@ -13,16 +10,6 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import MenuItem from '@material-ui/core/MenuItem';
-// import {
-//     Chart,
-//     BarSeries,
-//     Title,
-//     ArgumentAxis,
-//     ValueAxis,
-//     Tooltip,
-//     Legend,
-// } from '@devexpress/dx-react-chart-material-ui';
-// import { Stack, Animation, EventTracker } from '@devexpress/dx-react-chart';
 import { Chart, Series, Tooltip, Label, ArgumentAxis, Legend } from 'devextreme-react/chart'
 
 const choices = [
