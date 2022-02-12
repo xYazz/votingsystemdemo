@@ -21,6 +21,8 @@ import jwt
 from project import settings
 # Create your views here.
 
+now = timezone.now()+datetime.timedelta(hours=1)
+
 def get_user(req):
     return CustomUser.objects.get(id=(jwt.decode(req.headers['Authorization'][4:], settings.SECRET_KEY, algorithms=['HS256']))['user_id'])
 
@@ -31,10 +33,10 @@ class VoteList(APIView):
     def get(self, request, format=None):
         user = get_user(request)
         
-        votes = Vote.objects.filter(end_date__gt=timezone.now()+datetime.timedelta(hours=1), start_date__lt=timezone.now()+datetime.timedelta(hours=1))
+        votes = Vote.objects.filter(end_date__gt=now, start_date__lt=now)
         public = votes.filter(private=False)
         private = votes.filter(private=True, id__in= CanVote.objects.filter(voter=user, can_vote=True).values_list('vote', flat=True))
-        available = public
+        available = public | private
         serializer = VoteSerializer(available, many=True)
         return Response(serializer.data)
 
@@ -44,10 +46,10 @@ class EndedVoteList(APIView):
 
     def get(self, request, format=None):
         user = get_user(request)
-        votes = Vote.objects.filter(end_date__lt=datetime.datetime.now(tz=timezone.utc)).filter(id__in=Candidate.objects.all().values_list('vote', flat=True))
+        votes = Vote.objects.filter(end_date__lt=now).filter(id__in=Candidate.objects.all().values_list('vote', flat=True))
         public = votes.filter(private=False)
         private = votes.filter(private=True, id__in= CanVote.objects.filter(voter=user, can_vote=True).values_list('vote', flat=True))
-        available = public
+        available = public | private
         serializer = VoteSerializer(available, many=True).data
         # response = []
         # for vote in serializer:
