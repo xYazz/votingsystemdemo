@@ -78,6 +78,7 @@ class Votes extends React.Component {
 	render() {
 		const { classes } = this.props;
 		return (<div>
+			{console.log(state)},
 			<Container maxWidth="md" component="main" display='flex' >
 				{this.state.loading ? <LoadingPage />: (
 					<Paper elevation={16} sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
