@@ -25,7 +25,7 @@ def date():
 
 class VoteResult(models.Model):
     vote = ForeignKey("Vote", on_delete=CASCADE)
-    result = JSONField()
+    results = JSONField()
 
 class Candidate(models.Model):
     first_name = models.CharField(max_length=100, blank=False)
