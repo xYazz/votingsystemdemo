@@ -30,7 +30,7 @@ class VoteVoterSerializer(serializers.ModelSerializer):
 class VoteResultSerializer(serializers.ModelSerializer):
     class Meta:
         model = VoteResult
-        fields = ('id', 'vote', 'result')
+        fields = ('id', 'vote', 'results')
 
 class AddVoteVoterSerializer(serializers.ModelSerializer):
     class Meta:
