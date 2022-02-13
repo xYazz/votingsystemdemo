@@ -205,6 +205,10 @@ function Profile() {
                         size="small"
                         onClick={() => {
                           let today = new Date();
+                          setState({
+                            ...state, dialogVoteEditOpen: true, toEditVote
+                              : vote
+                          });
                           if (new Date(vote.start_date) <= today) { alert("Nie można edytować głosowania, które się już rozpoczęło. W szczególnych przypadkach skontaktuj się z administratorem.") }
                           else {
                             setState({
