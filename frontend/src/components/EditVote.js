@@ -40,7 +40,8 @@ const EditVote = (props) => {
                 description: props.state.toEditVote.description,
                 start_date: props.state.toEditVote.start_date,
                 end_date: props.state.toEditVote.end_date,
-                private: props.state.toEditVote.private
+                private: props.state.toEditVote.private,
+                max_votes: props.state.toEditVote.max_votes
             }).then((res) => {
                 if (res.status == 202) {
                     promptResponse(enqueueSnackbar, 'Edycja zakończona pomyślnie.', 'success');
@@ -99,6 +100,18 @@ const EditVote = (props) => {
                                     </MenuItem>
                                 ))}
                             </TextField>
+                            <TextField
+                                autoFocus
+                                margin="normal"
+                                id="max_votes"
+                                label="Max. ilość głosó"
+                                name="max_votes"
+                                value={props.state.toEditVote.max_votes}
+                                type="number"
+                                fullWidth
+                                onChange={handleChangeVoteEdit}
+                                variant="outlined"
+                            />
                             <FormControl>
                                 <FormLabel id="demo-radio-buttons-group-label">Widoczność</FormLabel>
                                 <RadioGroup
