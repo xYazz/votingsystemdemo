@@ -11,6 +11,13 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import MenuItem from '@material-ui/core/MenuItem';
 import { Chart, Series, Tooltip, Label, ArgumentAxis, Legend } from 'devextreme-react/chart'
+import PieChart, {
+    Series,
+    Label,
+    Connector,
+    Size,
+    Export,
+  } from 'devextreme-react/pie-chart';
 
 const choices = [
     "Edukacja",
@@ -47,10 +54,10 @@ const Results = (props) => {
 
     const getData = () => {
         axiosInstance('/api/results/' + props.location.state.vote_id).then((response) => {
-            console.log(response.data.result)
+            
             setState({
                 ...state,
-                results: JSON.parse(response.data.result),
+                results: response.data.result?JSON.parse(response.data.result):null,
                 detail_id: 0,
                 detail_view: false,
                 loading: false,
@@ -87,12 +94,22 @@ const Results = (props) => {
             )
         }
     }
-    let i = 0
-    const Label = props => (
-        console.log(props),
 
-        <Legend.Label text="test" sx={{ whiteSpace: 'nowrap' }} />
-    );
+    const pointClickHandler = (e) => {
+        this.toggleVisibility(e.target);
+      }
+    
+      const legendClickHandler = (e) => {
+        const arg = e.target;
+        const item = e.component.getAllSeries()[0].getPointsByArg(arg)[0];
+    
+        this.toggleVisibility(item);
+      }
+    
+      const toggleVisibility = (item) => {
+        item.isVisible() ? item.hide() : item.show();
+      }
+
     useEffect(() => {
         getData();
     }, []);
@@ -103,12 +120,10 @@ const Results = (props) => {
         <Container component="main" maxWidth="xl" sx={{ mb: 4 }}>
             {state?.loading ? <LoadingPage /> :
                 <React.Fragment>
-                    {console.log(state),
-                        console.log(state.results),
-                        console.log(state.results['Edukacja'])
-                    }
                     <form className={classes.form} noValidate>
                         <Container component="main" maxWidth="xs" sx={{ mb: 2 }}>
+                        {state.result?
+                                <React.Fragment>
                             <Grid container spacing={2}>
                                 <Grid item xs={12} align="center">
                                     <Typography component='h4' variant='h4'>
@@ -154,25 +169,51 @@ const Results = (props) => {
                                         </TextField>
                                     </Grid> : null}
                             </Grid>
+                            </React.Fragment>:
+                            <Grid item xs={12} align="center">
+                                    <Typography component='h4' variant='h4'>
+                                        Nikt nie wziął udziału w wyborach.
+                                    </Typography>
+                                </Grid>}
                         </Container>
                     </form>
                     {choiceData ?
-                        (<Chart
-                            dataSource={choiceData}
+                        <PieChart
+                        id="pie"
+                        dataSource={choiceData}
+                        palette="Bright"
+                        title="Podsumowanie"
+                        onPointClick={this.pointClickHandler}
+                        onLegendClick={this.legendClickHandler}
+                      >
+                        <Series
+                          argumentField="label"
+                          valueField="value"
                         >
-                            <Series
-                                valueField="value"
-                                argumentField="label"
-                                type="bar"
-                                overlappingBehavior={'stagger'}
-                            />
-                            <Legend visible={false} />
+                          <Label visible={true}>
+                            <Connector visible={true} width={1} />
+                          </Label>
+                        </Series>
+                
+                        <Size width={500} />
+                        <Export enabled={true} />
+                      </PieChart>
+                        // <Chart
+                        //     dataSource={choiceData}
+                        // >
+                        //     <Series
+                        //         valueField="value"
+                        //         argumentField="label"
+                        //         type="bar"
+                        //         overlappingBehavior={'stagger'}
+                        //     />
+                        //     <Legend visible={false} />
 
-                            <Tooltip
-                                enabled={true}
-                            />
-                        </Chart>
-                        ) : null}
+                        //     <Tooltip
+                        //         enabled={true}
+                        //     />
+                        // </Chart>
+                        : null}
                 </React.Fragment>}
         </Container>
     </div>
