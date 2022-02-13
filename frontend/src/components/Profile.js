@@ -204,6 +204,10 @@ function Profile() {
                         aria-label="edit"
                         size="small"
                         onClick={() => {
+                          setState({
+                            ...state, dialogVoteEditOpen: true, toEditVote
+                              : vote
+                          });
                           let today = new Date();
                           if (new Date(vote.start_date) <= today) { alert("Nie można edytować głosowania, które się już rozpoczęło. W szczególnych przypadkach skontaktuj się z administratorem.") }
                           else {
