@@ -145,8 +145,8 @@ class Vote extends Component {
 						<p>Rodzaj głosowania: {this.state.type}</p>
 						<p>Opis głosowania: {this.state.description}</p>
 						<p>Maksymalna ilość głosów oddanych przez wyborcę: {this.state.max_votes}</p>
-						<p>Data rozpoczęcia: {moment(this.state.start_date).format("YYYY-MM-DD " + "hh:mm:ss")}</p>
-						<p>Data zakończenia: {moment(this.state.end_date).format("YYYY-MM-DD " + "hh:mm:ss")}</p>
+						<p>Data rozpoczęcia: {moment(this.state.start_date).format("YYYY-MM-DD " + "HH:mm:ss")}</p>
+						<p>Data zakończenia: {moment(this.state.end_date).format("YYYY-MM-DD " + "HH:mm:ss")}</p>
 						{(this.state.candidates.length < 1) ?
 							<h2>Brak kandydatów. Skontaktuj się z twórcą głosowania</h2> :
 							(this.state.able_to_vote == true) ?<React.Fragment>
