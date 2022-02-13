@@ -500,4 +500,4 @@ export default function SignUp() {
 	);
 }
 
-export { useStyles }
+export { useStyles, isValidName }

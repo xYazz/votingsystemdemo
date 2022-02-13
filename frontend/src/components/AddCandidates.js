@@ -15,6 +15,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import MenuItem from '@material-ui/core/MenuItem';
 import { SnackbarProvider, useSnackbar } from 'notistack';
+import { isValidName } from './Register';
 
 const useStyles = makeStyles((theme) => ({
 	paper: {
@@ -47,14 +48,6 @@ const promptResponse = ( snackbar, message, variant) => {
 };
 
 const validateCandidateData = (first_name, last_name, description) => {
-	function isValidName(name) {
-		var formatted_name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
-		if (/^[a-zA-Z]+$/.test(formatted_name)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
 
 	if (isValidName(first_name) && isValidName(last_name)) {
 		if (first_name.length > 100) { return "Długość imienia nie może przekraczać 100 znaków." };
