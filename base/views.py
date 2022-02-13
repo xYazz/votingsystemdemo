@@ -263,12 +263,12 @@ class Results(APIView):
     def get(self,request, format=None, **kwargs):
         
         try: 
-            vote = Vote.objects.filter(id=self.request.resolver_match.kwargs["pk"]).last()
+            vote = Vote.objects.get(id=self.request.resolver_match.kwargs["pk"])
         except ObjectDoesNotExist:
             return Response({"Błąd", "Głosowanie nie istnieje."}, status=status.HTTP_404_NOT_FOUND)
         if len(VoteSerializer(vote).data['candidates']):
             try:
-                result=VoteResult.objects.get(vote=vote)
+                result=VoteResult.objects.filter(vote=vote).last()
             except ObjectDoesNotExist:   
                 results = {"Edukacja": {}, "Miejsce zamieszkania":{},"Status społeczny":{}, "Kandydaci": []}
                 vote_voters = VoteVoter.objects.filter(vote=vote)
