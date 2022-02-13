@@ -79,8 +79,8 @@ const CreateVotePage = () => {
         type: 5,
         name: "Wybory ogólne",
         description: "Wybory bez specyficznych kryteriów, każda osoba może zagłosować.",
-        start_date: moment().format("YYYY-MM-DD"+"T"+"hh:mm:ss"+"Z"),
-        end_date: moment().format("YYYY-MM-DD"+"T"+"hh:mm:ss"+"Z"),
+        start_date: moment().format("YYYY-MM-DD"+"T"+"HH:mm:ss"),
+        end_date: moment().format("YYYY-MM-DD"+"T"+"HH:mm:ss"),
         max_votes: 2,
         private: 'False',
     });

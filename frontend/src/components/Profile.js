@@ -247,8 +247,8 @@ function Profile() {
                     <TableCell align="right">{vote.name}</TableCell>
                     <TableCell align="right">{vote_type[vote.type]}</TableCell>
                     <TableCell align="right">{vote.private ? vote.code : "Brak"}</TableCell>
-                    <TableCell align="right">{moment(vote.start_date).format("YYYY-MM-DD " + "hh:mm:ss")}</TableCell>
-                    <TableCell align="right">{moment(vote.end_date).format("YYYY-MM-DD " + "hh:mm:ss")}</TableCell>
+                    <TableCell align="right">{moment(vote.start_date).format("YYYY-MM-DD " + "HH:mm:ss")}</TableCell>
+                    <TableCell align="right">{moment(vote.end_date).format("YYYY-MM-DD " + "HH:mm:ss")}</TableCell>
                   </TableRow>
 
                   {vote.candidates.length > 0 ?
