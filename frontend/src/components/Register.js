@@ -16,6 +16,15 @@ import Container from '@material-ui/core/Container';
 import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@mui/material/Paper';
 
+function isValidName(formatted_name) {
+	if (formatted_name.length > 100) { return false };
+	if (/(^[a-zA-ZżźćńółęąśŻŹĆĄŚĘŁÓŃ]+\-[a-zA-ZżźćńółęąśŻŹĆĄŚĘŁÓŃ]+$)|(^[a-zA-ZżźćńółęąśŻŹĆĄŚĘŁÓŃ]+\s([a-zA-ZżźćńółęąśŻŹĆĄŚĘŁÓŃ])+$)|(^[a-zA-ZżźćńółęąśŻŹĆĄŚĘŁÓŃ]+$)/.test(formatted_name)) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
 const educations = [
 	{
 		value: '1',
@@ -199,15 +208,6 @@ export default function SignUp() {
 			return false
 		} else {
 			return true
-		}
-	}
-
-	function isValidName(formatted_name) {
-		if (formatted_name.length > 100) { return false };
-		if (/(^[a-zA-ZżźćńółęąśŻŹĆĄŚĘŁÓŃ]+\-[a-zA-ZżźćńółęąśŻŹĆĄŚĘŁÓŃ]+$)|(^[a-zA-ZżźćńółęąśŻŹĆĄŚĘŁÓŃ]+\s([a-zA-ZżźćńółęąśŻŹĆĄŚĘŁÓŃ])+$)|(^[a-zA-ZżźćńółęąśŻŹĆĄŚĘŁÓŃ]+$)/.test(formatted_name)) {
-			return true;
-		} else {
-			return false;
 		}
 	}
 
