@@ -57,7 +57,7 @@ const Results = (props) => {
             
             setState({
                 ...state,
-                results: response.data.results?JSON.parse(response.data.results):null,
+                results: response.data.results?JSON.parse(response.data.results):response.data.results?JSON.parse(response.data.result):null,
                 detail_id: 0,
                 detail_view: false,
                 loading: false,
