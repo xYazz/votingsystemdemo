@@ -30,28 +30,24 @@ export default class App extends Component {
             <div className="center">
                 <StyledEngineProvider injectFirst>
                     <SnackbarProvider maxSnack={3}>
-                        <Router forceRefresh={true}>
-                            <Header />
-                            <Route exact path='/' component={HomePage} />
-                            <Route path='/register' component={Register} />
-                            <Route path='/add_candidate' component={AddCandidate} />
-                            <Suspense fallback={<LoadingPage />}>
+                            <Router forceRefresh={true}>
+                                <Suspense fallback={<div>loading..</div>}>
+                                <Header />
+                                <Route exact path='/' component={HomePage} />
+                                <Route path='/register' component={Register} />
+                                <Route path='/add_candidate' component={AddCandidate} />
                                 <Route path='/results' component={Results} />
-                            </Suspense>
-                            <Route path='/login' component={Login} />
-                            <Route path='/join' component={JoinVote} />
-                            <Route path='/pending' component={PendingRequests} />
-                            <Suspense fallback={<LoadingPage />}>
+                                <Route path='/login' component={Login} />
+                                <Route path='/join' component={JoinVote} />
+                                <Route path='/pending' component={PendingRequests} />
                                 <Route path='/results' component={Profile} />
-                            </Suspense>
-                            <Suspense fallback={<LoadingPage />}>
                                 <Route path='/results' component={Votes} />
-                            </Suspense>
-                            <Route path='/Logout' component={Logout} />
-                            <Route path='/create' component={CreateVotePage} />
-                            <Route path='/vote' component={Vote} />
-                            <Footer />
-                        </Router>
+                                <Route path='/Logout' component={Logout} />
+                                <Route path='/create' component={CreateVotePage} />
+                                <Route path='/vote' component={Vote} />
+                                <Footer />
+                                </Suspense>
+                            </Router>
                     </SnackbarProvider>
                 </StyledEngineProvider>
             </div>
