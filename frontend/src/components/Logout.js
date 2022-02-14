@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axiosInstance from '../axios';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
-
+import LoadingPage from './LoadingPage';
 export default function SignOut() {
 	const history = useHistory();
 
@@ -15,5 +15,5 @@ export default function SignOut() {
 		axiosInstance.defaults.headers['Authorization'] = null;
 		history.push('/login');
 	}), [];
-	return <div>Logout</div>;
+	return <div><LoadingPage /></div>;
 }
