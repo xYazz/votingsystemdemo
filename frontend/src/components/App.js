@@ -21,6 +21,7 @@ const Votes = lazy(() => import("./Votes"));
 const Profile = lazy(() => import("./Profile"));
 import JoinVote from "./JoinVote";
 import PendingRequests from "./PendingRequests";
+import LoadingPage from "./LoadingPage";
 
 export default class App extends Component {
     constructor(props) {
