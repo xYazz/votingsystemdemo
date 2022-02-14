@@ -9,7 +9,7 @@ import Login from "./Login";
 import './App.css';
 import Logout from "./Logout";
 import AddCandidate from "./AddCandidates"
-import { BrowserRouter as Router, Switch, Route, Link, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link, Redirect } from "react-router-dom";
 import HomePage from "./HomePage";
 import { StyledEngineProvider } from '@mui/material/styles';
 import { SnackbarProvider } from "notistack";
@@ -31,8 +31,9 @@ export default class App extends Component {
                 <StyledEngineProvider injectFirst>
                     <SnackbarProvider maxSnack={3}>
                             <Router forceRefresh={true}>
-                                <Header />
+                                <Routes>
                                 <Suspense fallback={<div>loading..</div>}>
+                                <Header />
                                 <Route exact path='/' component={HomePage} />
                                 <Route path='/register' component={Register} />
                                 <Route path='/add_candidate' component={AddCandidate} />
@@ -45,8 +46,9 @@ export default class App extends Component {
                                 <Route path='/Logout' component={Logout} />
                                 <Route path='/create' component={CreateVotePage} />
                                 <Route path='/vote' component={Vote} />
-                                </Suspense>
                                 <Footer />
+                                </Suspense>
+                                </Routes>
                             </Router>
                     </SnackbarProvider>
                 </StyledEngineProvider>
