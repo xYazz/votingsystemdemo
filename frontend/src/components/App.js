@@ -35,7 +35,7 @@ export default class App extends Component {
                             <Route exact path='/' component={HomePage} />
                             <Route path='/register' component={Register} />
                             <Route path='/add_candidate' component={AddCandidate} />
-                            <Suspense fallback={<div>{alert("test")}</div>}>
+                            <Suspense fallback={<div>{<LoadingPage/>}</div>}>
                                 <Route path='/results' component={Results} />
                                 <Route path='/results' component={Profile} />
                                 <Route path='/votes' component={Votes} />
@@ -47,7 +47,7 @@ export default class App extends Component {
                             <Route path='/create' component={CreateVotePage} />
                             <Route path='/vote' component={Vote} />
                         </Router>
-                            <Footer />
+                        <Footer />
                     </SnackbarProvider>
                 </StyledEngineProvider>
             </div>
