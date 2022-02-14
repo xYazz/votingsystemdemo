@@ -86,7 +86,7 @@ function Profile() {
 
   useEffect(() => {
     getProfileDetails();
-  });
+  }, []);
 
   // const addCandidate = (data) => {
   //   <Link to="/add_candidate"  vote_id={data} />
@@ -94,7 +94,6 @@ function Profile() {
 
   
   return <div>
-    test 
     <Suspense fallback={<LoadingPage />}>
       <ConfirmDialog state={state} setState={setState} getProfileDetails={getProfileDetails}/>
       <EditVote state={state} setState={setState} getProfileDetails={getProfileDetails} />
