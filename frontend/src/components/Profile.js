@@ -89,7 +89,7 @@ function Profile() {
 
   useEffect(() => {
     getProfileDetails();
-  }, []);
+  });
 
   // const addCandidate = (data) => {
   //   <Link to="/add_candidate"  vote_id={data} />
