@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Suspense, lazy } from "react";
 import { render } from "react-dom";
 import { ThemeProvider } from '@material-ui/core/styles';
 import { useTheme } from '@mui/material/styles';
@@ -18,7 +18,7 @@ import Votes from "./Votes";
 import HomePage from "./HomePage";
 import { StyledEngineProvider } from '@mui/material/styles';
 import { SnackbarProvider } from "notistack";
-import Results from "./Results";
+const Results = lazy(() => import("./Results"));
 import JoinVote from "./JoinVote";
 import PendingRequests from "./PendingRequests";
 
@@ -37,7 +37,9 @@ export default class App extends Component {
                             <Route exact path='/' component={HomePage} />
                             <Route path='/register' component={Register} />
                             <Route path='/add_candidate' component={AddCandidate} />
+                            <Suspense fallback={ <LoadingPage /> }>
                             <Route path='/results' component={Results} />
+                            </Suspense>
                             <Route path='/login' component={Login} />
                             <Route path='/join' component={JoinVote} />
                             <Route path='/pending' component={PendingRequests} />
