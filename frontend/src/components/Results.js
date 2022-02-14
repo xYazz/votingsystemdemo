@@ -57,7 +57,7 @@ const Results = (props) => {
             
             setState({
                 ...state,
-                results: response.data.result?JSON.parse(response.data.result):null,
+                results: response.data.results?JSON.parse(response.data.results):null,
                 detail_id: 0,
                 detail_view: false,
                 loading: false,
@@ -122,7 +122,7 @@ const Results = (props) => {
                 <React.Fragment>
                     <form className={classes.form} noValidate>
                         <Container component="main" maxWidth="xs" sx={{ mb: 2 }}>
-                        {state.result?
+                        {state.result['Edukacja']?
                                 <React.Fragment>
                             <Grid container spacing={2}>
                                 <Grid item xs={12} align="center">
