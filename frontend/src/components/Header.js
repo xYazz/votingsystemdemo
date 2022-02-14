@@ -161,8 +161,8 @@ function Header(props) {
 														onKeyDown={handleListKeyDown}
 													>	
 													
-														<MenuItem component={Link} to="/register">Rejestracja</MenuItem>
-														<MenuItem component={Link} to="/login">Logowanie</MenuItem>
+														<MenuItem onClick={() => handleClick('/register')}>Rejestracja</MenuItem>
+														<MenuItem onClick={() => handleClick('/login')}>Logowanie</MenuItem>
 													</MenuList>
 												</ClickAwayListener>
 											</Paper>
@@ -207,12 +207,12 @@ function Header(props) {
 														aria-labelledby="composition-button"
 														onKeyDown={handleListKeyDown}
 													>
-														<MenuItem component={Link} to="/create">Utwórz głosowanie</MenuItem>
-														<MenuItem component={Link} to="/votes">Lista głosowań</MenuItem>
-														<MenuItem component={Link} to="/profile">Profil</MenuItem>
-														<MenuItem component={Link} to="/join">Dołącz do głosowania</MenuItem>
-														<MenuItem component={Link} to="/pending">Prośby o dołączenie</MenuItem>
-														<MenuItem component={Link} to="/logout">Wyloguj się</MenuItem>
+														<MenuItem onClick={() => handleClick('/create')}>Utwórz głosowanie</MenuItem>
+														<MenuItem onClick={() => handleClick('/votes')}>Lista głosowań</MenuItem>
+														<MenuItem onClick={() => handleClick('/profile')}>Profil</MenuItem>
+														<MenuItem onClick={() => handleClick('/join')}>Dołącz do głosowania</MenuItem>
+														<MenuItem onClick={() => handleClick('/pending')}>Prośby o dołączenie</MenuItem>
+														<MenuItem onClick={() => handleClick('/logout')}>Wyloguj się</MenuItem>
 														
 													</MenuList>
 												</ClickAwayListener>
