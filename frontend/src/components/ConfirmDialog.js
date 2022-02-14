@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle}  from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle}  from '@mui/material';
 import axiosInstance from '../axios';
 import { promptResponse } from './AddCandidates';
 import { useSnackbar } from 'notistack';
