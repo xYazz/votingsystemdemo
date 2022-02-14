@@ -1,23 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { useprops } from 'react';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import { display } from '@mui/system';
-import MenuItem from '@material-ui/core/MenuItem';
+import React from 'react';
+
+import { TextField, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle}  from '@mui/material';
 import { validateVoteData } from './Profile';
 import axiosInstance from '../axios';
 import { vote_type } from './CreateVotePage';
 import { promptResponse } from './AddCandidates';
 import { useSnackbar } from 'notistack';
-import { FormControl, Radio } from '@material-ui/core';
-import { FormControlLabel } from '@material-ui/core';
-import { FormLabel } from '@material-ui/core';
-import { RadioGroup } from '@material-ui/core';
+import { MenuItem, RadioGroup, FormControlLabel, FormLabel } from '@material-ui/core';
 
 const EditVote = (props) => {
     const { enqueueSnackbar } = useSnackbar();
