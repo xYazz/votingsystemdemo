@@ -15,7 +15,7 @@ import { StyledEngineProvider } from '@mui/material/styles';
 import { SnackbarProvider } from "notistack";
 const Results = lazy(() => import("./Results"));
 const Votes = lazy(() => import("./Votes"));
-const Profile = lazy(() => import("./Profile.js"));
+const Profile = lazy(() => import("./Profile"));
 import JoinVote from "./JoinVote";
 import PendingRequests from "./PendingRequests";
 import LoadingPage from "./LoadingPage";
@@ -37,7 +37,7 @@ export default class App extends Component {
                             <Route path='/add_candidate' component={AddCandidate} />
                             <Suspense fallback={<div>{<LoadingPage/>}</div>}>
                                 <Route path='/results' component={Results} />
-                                <Route path='/results' component={Profile} />
+                                <Route path='/profile' component={Profile} />
                                 <Route path='/votes' component={Votes} />
                             </Suspense>
                             <Route path='/login' component={Login} />
