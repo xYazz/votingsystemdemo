@@ -204,7 +204,8 @@ export default function SignUp() {
 	}
 
 	function isValidPassword(password) {
-		if (password.length < 8) {
+		var pattern = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
+		if (!pattern.test(password)) {
 			return false
 		} else {
 			return true
@@ -223,7 +224,7 @@ export default function SignUp() {
 		first_name: "Wprowadzono niepoprawne znaki.",
 		last_name: "Wprowadzono niepoprawne znaki.",
 		pesel: "Nieprawidłowy numer PESEL.",
-		password: "Hasło powinno zawierać co najmniej 8 znaków.",
+		password: "Hasło powinno zawierać co najmniej 8 znaków, składać się z małych, wielkich liter, cyfr oraz znaków specjalnych.",
 		choice: "Pole wymagane"
 	}
 
