@@ -45,6 +45,6 @@ module.exports = {
         'NODE_ENV': JSON.stringify('production')
       }
     }),
-    new webpack.optimize.AggressiveMergingPlugin()//Merge chunks 
+    //new webpack.optimize.AggressiveMergingPlugin()//Merge chunks 
   ],
 };
