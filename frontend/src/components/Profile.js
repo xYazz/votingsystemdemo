@@ -97,8 +97,9 @@ function Profile() {
 
   
   return <div>
+    test 
     <Suspense fallback={<LoadingPage />}>
-      <ConfirmDialog state={state} setState={setState} />
+      <ConfirmDialog state={state} setState={setState} getProfileDetails={getProfileDetails}/>
       <EditVote state={state} setState={setState} getProfileDetails={getProfileDetails} />
       <EditCandidate state={state} setState={setState} getProfileDetails={getProfileDetails} />
     </Suspense>
