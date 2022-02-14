@@ -54,7 +54,7 @@ const Results = (props) => {
 
     const getData = () => {
         axiosInstance('/api/results/' + props.location.state.vote_id).then((response) => {
-            
+            console.log(response.data)
             setState({
                 ...state,
                 results: response.data.results?JSON.parse(response.data.results):response.data.result?JSON.parse(response.data.result):null,
@@ -197,7 +197,6 @@ const Results = (props) => {
                           </Label>
                         </Series>
                 
-                        <Size width={500} />
                         <Export enabled={true} />
                       </PieChart>
                         // <Chart
