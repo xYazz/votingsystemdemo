@@ -10,7 +10,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { Link, useHistory } from 'react-router-dom';
 const EditVote = lazy(() => import('./EditVote'));
 const EditCandidate = lazy(() => import('./EditCandidate'));
-const Dialog = lazy(() => import('./@mui/material/Dialog'));
+const Dialog = lazy(() => import('/@mui/material/Dialog'));
 import { promptResponse } from './AddCandidates';
 import { useSnackbar } from 'notistack';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
