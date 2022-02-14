@@ -2,7 +2,6 @@ import React, { Component, Suspense, lazy } from "react";
 import { render } from "react-dom";
 import CreateVotePage from "./CreateVotePage";
 import Register from "./Register";
-import Vote from "./Vote";
 import Header from "./Header";
 import Footer from "./Footer";
 import Login from "./Login";
@@ -16,8 +15,9 @@ import { SnackbarProvider } from "notistack";
 const Results = lazy(() => import("./Results"));
 const Votes = lazy(() => import("./Votes"));
 const Profile = lazy(() => import("./Profile"));
+const Vote = lazy(() => import("./Vote"));
+const PendingRequests = lazy(() => import("./PendingRequests"));
 import JoinVote from "./JoinVote";
-import PendingRequests from "./PendingRequests";
 import LoadingPage from "./LoadingPage";
 
 export default class App extends Component {
@@ -39,13 +39,13 @@ export default class App extends Component {
                                 <Route path='/results' component={Results} />
                                 <Route path='/profile' component={Profile} />
                                 <Route path='/votes' component={Votes} />
+                                <Route path='/pending' component={PendingRequests} />
+                                <Route path='/vote' component={Vote} />
                             </Suspense>
                             <Route path='/login' component={Login} />
                             <Route path='/join' component={JoinVote} />
-                            <Route path='/pending' component={PendingRequests} />
                             <Route path='/Logout' component={Logout} />
                             <Route path='/create' component={CreateVotePage} />
-                            <Route path='/vote' component={Vote} />
                         </Router>
                         <Footer />
                     </SnackbarProvider>
