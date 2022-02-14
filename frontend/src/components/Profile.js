@@ -1,41 +1,15 @@
-import React, { Component, useEffect } from 'react';
+import React, { useState, Suspense, lazy, useEffect } from 'react';
 import moment from "moment";
-import { makeStyles } from '@mui/styles';
-import { useTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import { withStyles } from "@mui/styles";
 import axiosInstance from '../axios';
 import jwtDecode from 'jwt-decode';
-import { Paper } from '@mui/material';
-import { Container } from '@mui/material';
-import Collapse from '@mui/material/Collapse';
-import IconButton from '@mui/material/IconButton';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Typography from '@mui/material/Typography';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import EditIcon from '@mui/icons-material/Edit';
-import Button from '@mui/material/Button';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import { Redirect, useHistory } from 'react-router-dom';
-import EditVote from './EditVote';
-import EditCandidate from './EditCandidate';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import Slide from '@mui/material/Slide';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import { useState } from 'react';
+import { Box, Slide, DialogTitle, DialogContentText, DialogContent, DialogActions, Paper, Container, Collapse, IconButton, Table, TableBody, TableCell, TableContainer, TableRow, Typography, Button } from '@mui/material';
+import { DeleteForeverIcon, KeyboardArrowDownIcon, KeyboardArrowUpIcon, EditIcon, PersonAddIcon } from '@mui/icons-material/';
+import { Link, useHistory } from 'react-router-dom';
+const EditVote = lazy(() => import('./EditVote'));
+const EditCandidate = lazy(() => import('./EditCandidate'));
+const Dialog = lazy(() => import('./@mui/material/Dialog'));
 import { promptResponse } from './AddCandidates';
 import { useSnackbar } from 'notistack';
-import SpinStretch from "react-cssfx-loading/lib/SpinStretch";
 import LoadingPage from './LoadingPage';
 
 const vote_type = {
@@ -86,7 +60,7 @@ function Profile() {
     confirmDialogOpen: false,
     toDeleteId: false,
     toDeleteURL: false,
-    loading:true,
+    loading: true,
   })
 
 
@@ -105,7 +79,7 @@ function Profile() {
         confirmDialogOpen: false,
         loading: false,
       });
-      
+
     });
   }
 
@@ -113,9 +87,9 @@ function Profile() {
     getProfileDetails();
   }, []);
 
-  const addCandidate = (data) => {
-    history.push("/add_candidate", { vote_id: data })
-  };
+  // const addCandidate = (data) => {
+  //   <Link to="/add_candidate"  vote_id={data} />
+  // };
 
   const handleConfirmClick = () => {
     axiosInstance.delete(state.toDeleteURL + state.toDeleteId)
@@ -133,33 +107,39 @@ function Profile() {
       })
   }
   return <div>
-    <Dialog
-      open={state.confirmDialogOpen}
-      TransitionComponent={Transition}
-      keepMounted
-      onClose={() => {
-        setState({ ...state, confirmDialogOpen: false });
-      }}
-      aria-describedby="alert-dialog-slide-description"
-    >
-      <DialogTitle>{"Uwaga"}</DialogTitle>
-      <DialogContent>
-        <DialogContentText id="alert-dialog-slide-description">
-          Czy na pewno chcesz usunąć wybrany element?
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={() => {
+    <Suspense fallback={<LoadingPage />}>
+      <Dialog
+        open={state.confirmDialogOpen}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={() => {
           setState({ ...state, confirmDialogOpen: false });
-        }}>Anuluj</Button>
-        <Button onClick={handleConfirmClick}>Potwierdź</Button>
-      </DialogActions>
-    </Dialog>
-    <EditVote state={state} setState={setState} getProfileDetails={getProfileDetails} />
-    <EditCandidate state={state} setState={setState} getProfileDetails={getProfileDetails} />
+        }}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>{"Uwaga"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            Czy na pewno chcesz usunąć wybrany element?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => {
+            setState({ ...state, confirmDialogOpen: false });
+          }}>Anuluj</Button>
+          <Button onClick={handleConfirmClick}>Potwierdź</Button>
+        </DialogActions>
+      </Dialog>
+    </Suspense>
+    <Suspense fallback={<LoadingPage />}>
+      <EditVote state={state} setState={setState} getProfileDetails={getProfileDetails} />
+    </Suspense>
+    <Suspense fallback={<LoadingPage />}>
+      <EditCandidate state={state} setState={setState} getProfileDetails={getProfileDetails} />
+    </Suspense>
     <Container component="main" maxWidth="lg" sx={{ mb: 4 }}>
-      {state.loading? <LoadingPage /> :(<Paper elevation={16} sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
-      {console.log(state)}
+      {state.loading ? <LoadingPage /> : (<Paper elevation={16} sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
+        {console.log(state)}
         <h3>{state.userData.first_name} {state.userData.last_name}</h3>
         <p>PESEL: {state.userData.pesel}</p>
         <p>Adres e-mail: {state.userData.email}</p>
@@ -219,15 +199,11 @@ function Profile() {
                       </IconButton>
                     </TableCell>
                     <TableCell>
-                      <IconButton
-                        aria-label="add"
-                        size="small"
-                        id="1"
-                        name={vote.id}
-                        onClick={((e) => addCandidate(vote.id))}
-                      >
+
+                      <Link to="/add_candidate" vote_id={data}>
+
                         <PersonAddIcon />
-                      </IconButton>
+                      </Link>
                     </TableCell>
                     <TableCell>
                       <IconButton
@@ -328,7 +304,7 @@ function Profile() {
               )))}
 
           </Table>
-        </TableContainer>:null}
+        </TableContainer> : null}
       </Paper>)}
     </Container>
   </div>;
