@@ -3,13 +3,14 @@ import moment from "moment";
 import axiosInstance from '../axios';
 import jwtDecode from 'jwt-decode';
 import { Box, Slide, DialogTitle, DialogContentText, DialogContent, DialogActions, Paper, Container, Collapse, IconButton, Table, TableBody, TableCell, TableContainer, TableRow, Typography, Button } from '@mui/material';
-import { DeleteForeverIcon, KeyboardArrowDownIcon, KeyboardArrowUpIcon, EditIcon, PersonAddIcon } from '@mui/icons-material/';
+import { KeyboardArrowDownIcon, KeyboardArrowUpIcon, EditIcon, PersonAddIcon } from '@mui/icons-material/';
 import { Link, useHistory } from 'react-router-dom';
 const EditVote = lazy(() => import('./EditVote'));
 const EditCandidate = lazy(() => import('./EditCandidate'));
 const Dialog = lazy(() => import('./@mui/material/Dialog'));
 import { promptResponse } from './AddCandidates';
 import { useSnackbar } from 'notistack';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import LoadingPage from './LoadingPage';
 
 const vote_type = {
