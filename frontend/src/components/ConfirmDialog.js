@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, TextField, Dialog, DialogActions, DialogContent, Text, DialogTitle}  from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle}  from '@mui/material';
 import axiosInstance from '../axios';
 import { promptResponse } from './AddCandidates';
 import { useSnackbar } from 'notistack';
@@ -25,6 +25,9 @@ const ConfirmDialog = (props) => {
           })
       }
 
+      const Transition = React.forwardRef(function Transition(props, ref) {
+        return <Slide direction="up" ref={ref} {...props} />;
+      });
   return (
     <div><Dialog
     open={props.state.confirmDialogOpen}
