@@ -10,7 +10,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { Link, useHistory } from 'react-router-dom';
 const EditVote = lazy(() => import('./EditVote'));
 const EditCandidate = lazy(() => import('./EditCandidate'));
-const Dialog = lazy(() => import('/@mui/material/Dialog'));
+const ConfirmDialog = lazy(() => import('./ConfirmDialog'));
 import { promptResponse } from './AddCandidates';
 import { useSnackbar } from 'notistack';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
@@ -95,50 +95,11 @@ function Profile() {
   //   <Link to="/add_candidate"  vote_id={data} />
   // };
 
-  const handleConfirmClick = () => {
-    axiosInstance.delete(state.toDeleteURL + state.toDeleteId)
-      .then((res) => {
-        if (res.status == 202) {
-          promptResponse(enqueueSnackbar, 'Pomyślnie usunięto element.', 'success')
-        } else {
-
-          promptResponse(enqueueSnackbar, 'Wystąpił nieznany błąd.', 'error')
-        }
-        getProfileDetails()
-      })
-      .catch(error => {
-        console.log(error)
-      })
-  }
+  
   return <div>
     <Suspense fallback={<LoadingPage />}>
-      <Dialog
-        open={state.confirmDialogOpen}
-        TransitionComponent={Transition}
-        keepMounted
-        onClose={() => {
-          setState({ ...state, confirmDialogOpen: false });
-        }}
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <DialogTitle>{"Uwaga"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-            Czy na pewno chcesz usunąć wybrany element?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => {
-            setState({ ...state, confirmDialogOpen: false });
-          }}>Anuluj</Button>
-          <Button onClick={handleConfirmClick}>Potwierdź</Button>
-        </DialogActions>
-      </Dialog>
-    </Suspense>
-    <Suspense fallback={<LoadingPage />}>
+      <ConfirmDialog state={state} setState={setState} />
       <EditVote state={state} setState={setState} getProfileDetails={getProfileDetails} />
-    </Suspense>
-    <Suspense fallback={<LoadingPage />}>
       <EditCandidate state={state} setState={setState} getProfileDetails={getProfileDetails} />
     </Suspense>
     <Container component="main" maxWidth="lg" sx={{ mb: 4 }}>
