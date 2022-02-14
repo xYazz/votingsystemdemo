@@ -159,9 +159,14 @@ function Header(props) {
 														id="composition-menu"
 														aria-labelledby="composition-button"
 														onKeyDown={handleListKeyDown}
-													>
-														<MenuItem onClick={() => handleClick('/register')}>Rejestracja</MenuItem>
-														<MenuItem onClick={() => handleClick('/login')}>Logowanie</MenuItem>
+													>	
+			
+													<Link to='/register' >
+														<MenuItem>Rejestracja</MenuItem>
+														</Link>
+														<Link to='/login' >
+														<MenuItem>Logowanie</MenuItem>
+														</Link>
 													</MenuList>
 												</ClickAwayListener>
 											</Paper>
@@ -206,12 +211,24 @@ function Header(props) {
 														aria-labelledby="composition-button"
 														onKeyDown={handleListKeyDown}
 													>
-														<MenuItem onClick={() => handleClick('/create')}>Utwórz głosowanie</MenuItem>
-														<MenuItem onClick={() => handleClick('/votes')}>Lista głosowań</MenuItem>
-														<MenuItem onClick={() => handleClick('/profile')}>Profil</MenuItem>
-														<MenuItem onClick={() => handleClick('/join')}>Dołącz do głosowania</MenuItem>
-														<MenuItem onClick={() => handleClick('/pending')}>Prośby o dołączenie</MenuItem>
-														<MenuItem onClick={() => handleClick('/logout')}>Wyloguj się</MenuItem>
+														<Link to='/create' >
+														<MenuItem>Utwórz głosowanie</MenuItem>
+														</Link>
+														<Link to='/votes' >
+														<MenuItem>Lista głosowań</MenuItem>
+														</Link>
+														<Link to='/profile' >
+														<MenuItem>Profil</MenuItem>
+														</Link>
+														<Link to='/join' >
+														<MenuItem>Dołącz do głosowania</MenuItem>
+														</Link>
+														<Link to='/pending' >
+														<MenuItem>Prośby o dołączenie</MenuItem>
+														</Link>
+														<Link to='/logout' >
+														<MenuItem>Wyloguj się</MenuItem>
+														</Link>
 														
 													</MenuList>
 												</ClickAwayListener>
