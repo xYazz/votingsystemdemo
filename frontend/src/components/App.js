@@ -12,13 +12,13 @@ import Login from "./Login";
 import './App.css';
 import Logout from "./Logout";
 import AddCandidate from "./AddCandidates"
-import Profile from "./Profile";
 import { BrowserRouter as Router, Switch, Route, Link, Redirect } from "react-router-dom";
-import Votes from "./Votes";
 import HomePage from "./HomePage";
 import { StyledEngineProvider } from '@mui/material/styles';
 import { SnackbarProvider } from "notistack";
 const Results = lazy(() => import("./Results"));
+const Votes = lazy(() => import("./Votes"));
+const Profile = lazy(() => import("./Profile"));
 import JoinVote from "./JoinVote";
 import PendingRequests from "./PendingRequests";
 
@@ -37,14 +37,18 @@ export default class App extends Component {
                             <Route exact path='/' component={HomePage} />
                             <Route path='/register' component={Register} />
                             <Route path='/add_candidate' component={AddCandidate} />
-                            <Suspense fallback={ <LoadingPage /> }>
-                            <Route path='/results' component={Results} />
+                            <Suspense fallback={<LoadingPage />}>
+                                <Route path='/results' component={Results} />
                             </Suspense>
                             <Route path='/login' component={Login} />
                             <Route path='/join' component={JoinVote} />
                             <Route path='/pending' component={PendingRequests} />
-                            <Route path='/profile' component={Profile} />
-                            <Route path='/votes' component={Votes} />
+                            <Suspense fallback={<LoadingPage />}>
+                                <Route path='/results' component={Profile} />
+                            </Suspense>
+                            <Suspense fallback={<LoadingPage />}>
+                                <Route path='/results' component={Votes} />
+                            </Suspense>
                             <Route path='/Logout' component={Logout} />
                             <Route path='/create' component={CreateVotePage} />
                             <Route path='/vote' component={Vote} />
