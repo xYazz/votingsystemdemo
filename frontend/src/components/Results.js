@@ -96,14 +96,14 @@ const Results = (props) => {
     }
 
     const pointClickHandler = (e) => {
-        this.toggleVisibility(e.target);
+        toggleVisibility(e.target);
       }
     
       const legendClickHandler = (e) => {
         const arg = e.target;
         const item = e.component.getAllSeries()[0].getPointsByArg(arg)[0];
     
-        this.toggleVisibility(item);
+        toggleVisibility(item);
       }
     
       const toggleVisibility = (item) => {
@@ -185,8 +185,8 @@ const Results = (props) => {
                         dataSource={choiceData}
                         palette="Bright"
                         title="Podsumowanie"
-                        onPointClick={this.pointClickHandler}
-                        onLegendClick={this.legendClickHandler}
+                        onPointClick={pointClickHandler}
+                        onLegendClick={legendClickHandler}
                       >
                         <Series
                           argumentField="label"
