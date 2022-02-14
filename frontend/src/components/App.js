@@ -31,8 +31,8 @@ export default class App extends Component {
                 <StyledEngineProvider injectFirst>
                     <SnackbarProvider maxSnack={3}>
                             <Router forceRefresh={true}>
-                                <Suspense fallback={<div>loading..</div>}>
                                 <Header />
+                                <Suspense fallback={<div>loading..</div>}>
                                 <Route exact path='/' component={HomePage} />
                                 <Route path='/register' component={Register} />
                                 <Route path='/add_candidate' component={AddCandidate} />
@@ -45,8 +45,8 @@ export default class App extends Component {
                                 <Route path='/Logout' component={Logout} />
                                 <Route path='/create' component={CreateVotePage} />
                                 <Route path='/vote' component={Vote} />
-                                <Footer />
                                 </Suspense>
+                                <Footer />
                             </Router>
                     </SnackbarProvider>
                 </StyledEngineProvider>
