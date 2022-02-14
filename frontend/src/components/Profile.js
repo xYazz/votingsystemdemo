@@ -163,8 +163,7 @@ function Profile() {
                     </TableCell>
                     <TableCell>
 
-                      <Link to="/add_candidate" vote_id={data}>
-
+                      <Link to="/add_candidate" vote_id={vote.id}>
                         <PersonAddIcon />
                       </Link>
                     </TableCell>
