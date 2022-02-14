@@ -123,6 +123,7 @@ const Results = (props) => {
                     <form className={classes.form} noValidate>
                         <Container component="main" maxWidth="xs" sx={{ mb: 2 }}>
                         {state.results?
+                        console.log(state.results)
                                 <React.Fragment>
                             <Grid container spacing={2}>
                                 <Grid item xs={12} align="center">
