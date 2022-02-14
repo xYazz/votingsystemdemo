@@ -1,8 +1,5 @@
 import React, { Component, Suspense, lazy } from "react";
 import { render } from "react-dom";
-import { ThemeProvider } from '@material-ui/core/styles';
-import { useTheme } from '@mui/material/styles';
-import RoomJoinPage from './RoomJoinPage';
 import CreateVotePage from "./CreateVotePage";
 import Register from "./Register";
 import Vote from "./Vote";
