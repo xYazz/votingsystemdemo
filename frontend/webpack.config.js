@@ -48,13 +48,13 @@ module.exports = {
     minimizer: [new TerserPlugin()],
   },
   plugins: [
-    new CompressionPlugin({
-      filename: '[filename].gz[query]',
-      algorithm: 'gzip',
-      test: /\.(js|css|html|svg)$/,
-      threshold: 8192,
-      minRatio: 0.8
-    }),
+    // new CompressionPlugin({
+    //   filename: '[name].gz[query]',
+    //   algorithm: 'gzip',
+    //   test: /\.(js|css|html|svg)$/,
+    //   threshold: 8192,
+    //   minRatio: 0.8
+    // }),
 
     new webpack.DefinePlugin({
       'process.env': {
