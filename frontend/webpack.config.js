@@ -4,6 +4,7 @@ const CompressionPlugin = require('compression-webpack-plugin');
 const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = {
+  devtool: 'source-map',
   entry: "./frontend/src/index.js",
   output: {
     path: path.resolve(__dirname, "./static/frontend"),
@@ -41,14 +42,11 @@ module.exports = {
       }),
       
     new webpack.DefinePlugin({
-      // "process.env": {
-      //   // This has effect on the react lib size
-      //   NODE_ENV: JSON.stringify("development"),}})
       'process.env': {
         'NODE_ENV': JSON.stringify('production')
       }
     }),
   
-    new webpack.optimize.AggressiveMergingPlugin()//Merge chunks 
+    new webpack.optimize.AggressiveMergingPlugin()
   ],
 };
