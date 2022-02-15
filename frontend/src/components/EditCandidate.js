@@ -1,5 +1,11 @@
 import React from 'react';
-import { Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle}  from '@mui/material';
+import TextField from '@mui/material/';
+import Button from '@mui/material/Button';
+import Dialog  from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import { validateCandidateData } from './AddCandidates';
 import axiosInstance from '../axios';
 import { promptResponse } from './AddCandidates';

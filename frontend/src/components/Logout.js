@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import axiosInstance from '../axios';
-import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import LoadingPage from './LoadingPage';
 export default function SignOut() {

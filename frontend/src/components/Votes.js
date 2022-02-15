@@ -1,17 +1,16 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { withStyles } from "@material-ui/core/styles";
-import { CardActionArea, CardHeader } from '@material-ui/core';
-import { Redirect } from 'react-router';
+import withStyles from "@material-ui/core/styles/withStyles";
+import CardActionArea from '@material-ui/core/CardActionArea';
 import axiosInstance from '../axios';
-import { Link } from "react-router-dom";
-import { Paper, Box, Stack , Button , Container } from '@mui/material';
-import SpinStretch from "react-cssfx-loading/lib/SpinStretch";
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
+import Container from '@mui/material/Container';
 import LoadingPage from './LoadingPage';
 
 const useStyles = makeStyles((theme) => ({

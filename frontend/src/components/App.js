@@ -8,7 +8,7 @@ import Login from "./Login";
 import './App.css';
 import Logout from "./Logout";
 import AddCandidate from "./AddCandidates"
-import { BrowserRouter as Router, Routes, Route, Link, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Route, } from "react-router-dom";
 import HomePage from "./HomePage";
 import { StyledEngineProvider } from '@mui/material/styles';
 import { SnackbarProvider } from "notistack";

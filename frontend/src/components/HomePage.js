@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { Container } from "@mui/material";
-import { Typography } from "@material-ui/core";
-import { Box } from "@material-ui/core";
-import { Paper } from "@mui/material";
+import Container from "@mui/material/Container";
+import Typography from "@material-ui/core/Typography";
+import Box from "@material-ui/core/Box";
+import Paper from "@mui/material/Paper";
 export default class HomePage extends Component {
     constructor(props) {
         super(props);

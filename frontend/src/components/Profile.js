@@ -2,17 +2,26 @@ import React, { useState, Suspense, lazy, useEffect } from 'react';
 import moment from "moment";
 import axiosInstance from '../axios';
 import jwtDecode from 'jwt-decode';
-import { Box, Slide, Paper, Container, Collapse, IconButton, Table, TableBody, TableCell, TableHead, TableContainer, TableRow, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
+import Container from '@mui/material/Container';
+import Collapse from '@mui/material/Collapse';
+import IconButton from '@mui/material/IconButton';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
+import TableContainer from '@mui/material/TableContainer';
+import TableRow from '@mui/material/TableRow';
+import Typography from '@mui/material/Typography';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import EditIcon from '@mui/icons-material/Edit';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 const EditVote = lazy(() => import('./EditVote'));
 const EditCandidate = lazy(() => import('./EditCandidate'));
 const ConfirmDialog = lazy(() => import('./ConfirmDialog'));
-import { promptResponse } from './AddCandidates';
-import { useSnackbar } from 'notistack';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import LoadingPage from './LoadingPage';
 
@@ -47,7 +56,6 @@ const validateVoteData = (vote) => {
 
 function Profile() {
   const history = useHistory();
-  const { enqueueSnackbar } = useSnackbar();
   const [state, setState] = useState({
     user: localStorage.getItem('access_token') ? jwtDecode(localStorage.getItem('access_token')).user_id : null,
     userData: false,

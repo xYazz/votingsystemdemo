@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
@@ -10,17 +10,16 @@ import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import moment from "moment";
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import MenuItem from '@material-ui/core/MenuItem';
 import { validateVoteData } from "./Profile";
 import axiosInstance from "../axios";
 import { promptResponse } from "./AddCandidates";
 import { useSnackbar } from "notistack";
-import { Paper } from '@mui/material';
-import { Container } from '@mui/material';
+import Paper from '@mui/material/Paper';
+import Container from '@mui/material/Container';
 import { useHistory } from "react-router-dom";
-import CssBaseline from '@material-ui/core/CssBaseline';
-import { FormLabel } from "@material-ui/core";
+import FormLabel from "@material-ui/core/FormLabel";
 
 const useStyles = makeStyles((theme) => ({
     paper: {

@@ -1,13 +1,11 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import LoadingPage from "./LoadingPage";
 import { useHistory } from "react-router-dom";
 import axiosInstance from "../axios";
-import PageNotFound from "./PageNotFound";
-import { CssBaseline } from "@mui/material";
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import Container from '@material-ui/core/Container';
 import MenuItem from '@material-ui/core/MenuItem';
 //import { Chart, Series, Tooltip, Label, ArgumentAxis, Legend } from 'devextreme-react/chart'
@@ -15,7 +13,6 @@ import PieChart, {
     Series,
     Label,
     Connector,
-    Size,
     Export,
   } from 'devextreme-react/pie-chart';
 
