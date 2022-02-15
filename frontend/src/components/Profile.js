@@ -86,10 +86,6 @@ function Profile() {
     getProfileDetails();
   }, []);
 
-  const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-  });
-
   return <div>
     <Suspense fallback={<LoadingPage />}>
       <ConfirmDialog state={state} setState={setState} getProfileDetails={getProfileDetails} Transition={Transition}/>
@@ -170,7 +166,7 @@ function Profile() {
                     <IconButton
                       aria-label="delete vote"
                       size="small"
-                      id="1"
+                      id={vote.id}
                       name={vote.id}
                       onClick={() => { setState({ ...state, confirmDialogOpen: true, toDeleteId: vote.id, toDeleteURL: '/api/get-vote/' }) }}
                     >
@@ -230,7 +226,7 @@ function Profile() {
                                       <IconButton
                                         aria-label="delete candidate"
                                         size="small"
-                                        id="1"
+                                        id={candidate.id}
                                         name={candidate.id}
                                         onClick={() => { setState({ ...state, confirmDialogOpen: true, toDeleteId: candidate.id, toDeleteURL: '/api/get-candidate/' }) }}
                                       >
