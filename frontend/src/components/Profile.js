@@ -68,10 +68,11 @@ function Profile() {
 
   const getProfileDetails = () => {
     axiosInstance('/api/profile/' + state.user).then((response) => {
-      let array = [false]
-      for (const element of response.data.votes) {
-        array[element.id] = false;
-      }
+      let array = [response.data.length]
+      array.fill(false)
+      // for (const element of response.data.votes) {
+      //   array[element.id] = false;
+      // }
       setState({
         ...state,
         userData: response.data.user,
@@ -87,11 +88,6 @@ function Profile() {
   useEffect(() => {
     getProfileDetails();
   }, []);
-
-  // const addCandidate = (data) => {
-  //   <Link to="/add_candidate"  vote_id={data} />
-  // };
-
   
   return <div>
     <Suspense fallback={<LoadingPage />}>
