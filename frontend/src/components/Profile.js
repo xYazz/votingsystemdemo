@@ -100,7 +100,7 @@ function Profile() {
       <EditCandidate state={state} setState={setState} getProfileDetails={getProfileDetails} />
     </Suspense>
     <Container component="main" maxWidth="lg" sx={{ mb: 4 }}>
-      {state.loading ? <LoadingPage /> : (<Paper elevation={16} sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
+      {state.loading ? null: (<Paper elevation={16} sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
         {console.log(state)}
         <h3>{state.userData.first_name} {state.userData.last_name}</h3>
         <p>PESEL: {state.userData.pesel}</p>
@@ -154,7 +154,6 @@ function Profile() {
                                 : vote
                             });
                           }
-
                         }}
                       >
                         <EditIcon />
