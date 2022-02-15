@@ -37,6 +37,7 @@ module.exports = {
       threshold: 8192,
       minRatio: 0.8
       }),
+      
     new webpack.DefinePlugin({
       // "process.env": {
       //   // This has effect on the react lib size
@@ -45,6 +46,13 @@ module.exports = {
         'NODE_ENV': JSON.stringify('production')
       }
     }),
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        screw_ie8: true,
+        warnings: false
+      }
+    }),
+  
     new webpack.optimize.AggressiveMergingPlugin()//Merge chunks 
   ],
 };
