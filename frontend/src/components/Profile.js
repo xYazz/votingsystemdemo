@@ -57,7 +57,6 @@ function Profile() {
     toEditVote: null,
     toEditCandidate: null,
     dialogCandidateEditOpen: false,
-    add_candidate: null,
     confirmDialogOpen: false,
     toDeleteId: false,
     toDeleteURL: false,
@@ -68,17 +67,15 @@ function Profile() {
 
   const getProfileDetails = () => {
     axiosInstance('/api/profile/' + state.user).then((response) => {
-      let array = new Array(response.data.length).fill(false);
-      // for (const element of response.data.votes) {
-      //   array[element.id] = false;
-      // }
       setState({
         ...state,
         userData: response.data.user,
         votes: response.data.votes,
-        open: array,
+        open: null,
         confirmDialogOpen: false,
         loading: false,
+        toDeleteId: false,
+        toDeleteURL: false,
       });
 
     });
