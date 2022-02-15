@@ -13,7 +13,7 @@ const ConfirmDialog = (props) => {
           .then((res) => {
             if (res.status == 202) {
               promptResponse(enqueueSnackbar, 'Pomyślnie usunięto element.', 'success')
-              getProfileDetails();
+              props.getProfileDetails();
             } else {
     
               promptResponse(enqueueSnackbar, 'Wystąpił nieznany błąd.', 'error')
