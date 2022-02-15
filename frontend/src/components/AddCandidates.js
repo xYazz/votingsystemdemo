@@ -90,7 +90,7 @@ export default function AddCandidate(props) {
 		console.log(props)
 		const validation = validateCandidateData(formData.first_name, formData.last_name, formData.description)
 		if (validation == true) {
-			axiosInstance.post("/api/add_candidate/" + vote?vote.vote_id:props.vote_id, {
+			axiosInstance.post("/api/add_candidate/" + vote.vote_id, {
 				first_name: formData.first_name,
 				last_name: formData.last_name,
 				description: formData.description

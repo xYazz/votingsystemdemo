@@ -88,15 +88,15 @@ function Profile() {
   useEffect(() => {
     getProfileDetails();
   }, []);
-  
+
   return <div>
     <Suspense fallback={<LoadingPage />}>
-      <ConfirmDialog state={state} setState={setState} getProfileDetails={getProfileDetails}/>
+      <ConfirmDialog state={state} setState={setState} getProfileDetails={getProfileDetails} />
       <EditVote state={state} setState={setState} getProfileDetails={getProfileDetails} />
       <EditCandidate state={state} setState={setState} getProfileDetails={getProfileDetails} />
     </Suspense>
     <Container component="main" maxWidth="lg" sx={{ mb: 4 }}>
-      {state.loading ? null: (<Paper elevation={16} sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
+      {state.loading ? null : (<Paper elevation={16} sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
         {console.log(state)}
         <h3>{state.userData.first_name} {state.userData.last_name}</h3>
         <p>PESEL: {state.userData.pesel}</p>
@@ -156,30 +156,31 @@ function Profile() {
                       </IconButton>
                     </TableCell>
                     <TableCell>
-
-                      <Link to="/add_candidate" params={vote.id}>
-                        <PersonAddIcon />
-                      </Link>
-                    </TableCell>
-                    <TableCell>
                       <IconButton
-                        aria-label="delete"
-                        size="small"
-                        id="1"
-                        name={vote.id}
-                        onClick={() => { setState({ ...state, confirmDialogOpen: true, toDeleteId: vote.id, toDeleteURL: '/api/get-vote/' }) }}
-                      >
-                        <DeleteForeverIcon />
-                      </IconButton>
-                    </TableCell>
-                    <TableCell align="right">{vote.name}</TableCell>
-                    <TableCell align="right">{vote_type[vote.type]}</TableCell>
-                    <TableCell align="right">{vote.private ? vote.code : "Brak"}</TableCell>
-                    <TableCell align="right">{moment(vote.start_date).format("YYYY-MM-DD " + "HH:mm:ss")}</TableCell>
-                    <TableCell align="right">{moment(vote.end_date).format("YYYY-MM-DD " + "HH:mm:ss")}</TableCell>
-                  </TableRow>
+                        onClick={() => history.push("/add_candidate/"+vote.id)}>
+                          <PersonAddIcon />
+                        </IconButton>
+                  </TableCell>
+                  <TableCell>
+                    <IconButton
+                      aria-label="delete"
+                      size="small"
+                      id="1"
+                      name={vote.id}
+                      onClick={() => { setState({ ...state, confirmDialogOpen: true, toDeleteId: vote.id, toDeleteURL: '/api/get-vote/' }) }}
+                    >
+                      <DeleteForeverIcon />
+                    </IconButton>
+                  </TableCell>
+                  <TableCell align="right">{vote.name}</TableCell>
+                  <TableCell align="right">{vote_type[vote.type]}</TableCell>
+                  <TableCell align="right">{vote.private ? vote.code : "Brak"}</TableCell>
+                  <TableCell align="right">{moment(vote.start_date).format("YYYY-MM-DD " + "HH:mm:ss")}</TableCell>
+                  <TableCell align="right">{moment(vote.end_date).format("YYYY-MM-DD " + "HH:mm:ss")}</TableCell>
+                </TableRow>
 
-                  {vote.candidates.length > 0 ?
+                  {
+                  vote.candidates.length > 0 ?
                     <TableRow>
                       <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
                         <Collapse in={state.open[vote.id]} timeout="auto" unmountOnExit>
@@ -253,17 +254,18 @@ function Profile() {
                           </Box>
                         </Collapse>
                       </TableCell>
-                    </TableRow>}
+                    </TableRow>
+                }
 
 
                 </React.Fragment>
               )))}
 
-          </Table>
+        </Table>
         </TableContainer> : null}
-      </Paper>)}
-    </Container>
-  </div>;
+    </Paper>)}
+  </Container>
+  </div >;
 };
 
 export default (Profile);
