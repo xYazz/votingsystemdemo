@@ -6,7 +6,7 @@ import axiosInstance from '../axios';
 import { vote_type } from './CreateVotePage';
 import { promptResponse } from './AddCandidates';
 import { useSnackbar } from 'notistack';
-import { MenuItem, RadioGroup, FormControl, FormControlLabel, FormLabel } from '@material-ui/core';
+import { MenuItem, Radio, RadioGroup, FormControl, FormControlLabel, FormLabel } from '@material-ui/core';
 
 const EditVote = (props) => {
     const { enqueueSnackbar } = useSnackbar();
