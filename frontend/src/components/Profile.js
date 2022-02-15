@@ -68,8 +68,7 @@ function Profile() {
 
   const getProfileDetails = () => {
     axiosInstance('/api/profile/' + state.user).then((response) => {
-      let array = [response.data.length]
-      array.fill(false)
+      let array = new Array(response.data.length).fill(false);
       // for (const element of response.data.votes) {
       //   array[element.id] = false;
       // }
@@ -84,9 +83,6 @@ function Profile() {
 
     });
   }
-  const addCandidate = (data) => {
-    history.push("/add_candidate", { vote_id: data })
-  };
 
   useEffect(() => {
     getProfileDetails();
@@ -160,7 +156,7 @@ function Profile() {
                     </TableCell>
                     <TableCell>
                       <IconButton
-                        onClick={(e) => history.push("/add_candidate", {vote_id:vote.id})}>
+                        onClick={() => history.push("/add_candidate", {vote_id:vote.id})}>
                           <PersonAddIcon />
                         </IconButton>
                   </TableCell>
