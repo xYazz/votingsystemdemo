@@ -4,7 +4,7 @@ const CompressionPlugin = require('compression-webpack-plugin');
 const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = {
-  devtool: 'source-map',
+  devtool: false,
   entry: "./frontend/src/index.js",
   output: {
     path: path.resolve(__dirname, "./static/frontend"),
