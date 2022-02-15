@@ -157,7 +157,7 @@ function Profile() {
                     </TableCell>
                     <TableCell>
                       <IconButton
-                        onClick={() => history.push("/add_candidate/"+vote.id)}>
+                        onClick={() => history.push("/add_candidate/", {vote_id=vote.id})}>
                           <PersonAddIcon />
                         </IconButton>
                   </TableCell>
