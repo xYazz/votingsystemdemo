@@ -36,7 +36,7 @@ const EditVote = (props) => {
                     promptResponse(enqueueSnackbar, 'Edycja zakończona pomyślnie.', 'success');
                     props.getProfileDetails();
                 } else {
-                    console.log(res)
+                    promptResponse(enqueueSnackbar, 'Wystąpił nieznany błąd.', 'error')
                 }
             })
                 .catch(error => {

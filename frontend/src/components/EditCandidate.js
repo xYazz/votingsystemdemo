@@ -34,7 +34,7 @@ const EditCandidate = (props) => {
 				}
 			})
         .catch(error => {
-          console.log(error)
+          promptResponse(enqueueSnackbar, 'Wystąpił nieznany błąd.', 'error')
         }
         );
 
