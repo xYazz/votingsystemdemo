@@ -9,7 +9,7 @@ const ConfirmDialog = (props) => {
 	const { enqueueSnackbar } = useSnackbar();
 
     const handleConfirmClick = () => {
-        axiosInstance.delete(state.toDeleteURL + state.toDeleteId)
+        axiosInstance.delete(props.state.toDeleteURL + props.state.toDeleteId)
           .then((res) => {
             if (res.status == 202) {
               promptResponse(enqueueSnackbar, 'Pomyślnie usunięto element.', 'success')
