@@ -31,8 +31,6 @@ const ConfirmDialog = (props) => {
     <div>
       <Dialog
         open={props.state.confirmDialogOpen}
-        TransitionComponent={props.Transition}
-        //keepMounted
         onClose={() => {
           props.setState({ ...props.state, confirmDialogOpen: false });
         }}

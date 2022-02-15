@@ -129,6 +129,7 @@ function Profile() {
                       <IconButton
                         aria-label="expand row"
                         size="small"
+                        name="add-candidate"
                         onClick={() => {
                           const newItemsArr = state.open;
                           newItemsArr[vote.id] = !newItemsArr[vote.id];
@@ -140,8 +141,9 @@ function Profile() {
                       </IconButton>
                     </TableCell> <TableCell>
                       <IconButton
-                        aria-label="edit"
+                        aria-label="edit vote"
                         size="small"
+                        name="edit-candidate"
                         onClick={() => {
                           let today = new Date();
                           if (new Date(vote.start_date) <= today) { alert("Nie można edytować głosowania, które się już rozpoczęło. W szczególnych przypadkach skontaktuj się z administratorem.") }
@@ -158,13 +160,15 @@ function Profile() {
                     </TableCell>
                     <TableCell>
                       <IconButton
+                        aria-label="add candidate"
+                        size="small"
                         onClick={() => history.push("/add_candidate", {vote_id:vote.id})}>
                           <PersonAddIcon />
                         </IconButton>
                   </TableCell>
                   <TableCell>
                     <IconButton
-                      aria-label="delete"
+                      aria-label="delete vote"
                       size="small"
                       id="1"
                       name={vote.id}
@@ -205,8 +209,9 @@ function Profile() {
                                   <TableRow key={candidate.id}>
                                     <TableCell>
                                       <IconButton
-                                        aria-label="edit"
+                                        aria-label="edit candidate"
                                         size="small"
+                                        name="edit candidate"
                                         onClick={() => {
                                           let today = new Date();
                                           if (new Date(vote.start_date) <= today) { alert("Nie można edytować głosowania, które się już rozpoczęło. W szczególnych przypadkach skontaktuj się z administratorem.") }
@@ -223,7 +228,7 @@ function Profile() {
                                     </TableCell>
                                     <TableCell>
                                       <IconButton
-                                        aria-label="delete-candidate"
+                                        aria-label="delete candidate"
                                         size="small"
                                         id="1"
                                         name={candidate.id}
