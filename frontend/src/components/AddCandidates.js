@@ -87,6 +87,7 @@ export default function AddCandidate(props) {
 
 	const handleButtonPressed = (e) => {
 		e.preventDefault();
+		console.log(props)
 		const validation = validateCandidateData(formData.first_name, formData.last_name, formData.description)
 		if (validation == true) {
 			axiosInstance.post("/api/add_candidate/" + vote?vote.vote_id:props.vote_id, {
