@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axiosInstance from '../axios';
 import Paper from '@mui/material/Paper';
 import Container from '@mui/material/Container';
@@ -18,7 +18,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { promptResponse } from './AddCandidates';
 import { useSnackbar } from 'notistack';
 import LoadingPage from './LoadingPage';
