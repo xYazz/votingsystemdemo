@@ -1,5 +1,5 @@
 import datetime
-
+from django.utils.dateparse import parse_date
 import json
 from django.utils import timezone
 from django.db.models import Count
@@ -156,7 +156,7 @@ class CanVoteRequest(APIView):
                 try:
                     can_vote = CanVote.objects.get(vote=vote, voter=user)
                 except ObjectDoesNotExist:
-                    if VoteSerializer(vote).data['start_date']>now:
+                    if parse_date(VoteSerializer(vote).data['start_date'])>now:
                         can_vote = CanVote(vote=vote, voter=user)
                         can_vote.save()
                     else:
