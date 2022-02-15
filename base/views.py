@@ -149,23 +149,25 @@ class CanVoteRequest(APIView):
         
         try:
             votes = Vote.objects.all()
+            code = request.data.get('code')
+            user = get_user(request)
+            try:
+                vote = votes.get(code=code)
+                try:
+                    can_vote = CanVote.objects.get(vote=vote, voter=user)
+                except ObjectDoesNotExist:
+                    if VoteSerializer(vote).data['start_date']>now:
+                        can_vote = CanVote(vote=vote, voter=user)
+                        can_vote.save()
+                    else:
+                        return Response({'Błąd': 'Wybory się rozpoczęły'}, status=status.HTTP_403_FORBIDDEN)
+                    return Response(CanVoteSerializer(can_vote).data, status=status.HTTP_200_OK)
+            except ObjectDoesNotExist:
+                return Response({'Błąd': 'Wprowadzony kod jest nieprawidłowy'}, status=status.HTTP_400_BAD_REQUEST)
         except ObjectDoesNotExist:
             return Response({'Błąd': 'Brak głosowań'}, status=status.HTTP_204_NO_CONTENT)
-        code = request.data.get('code')
-        user = get_user(request)
-        try:
-            vote = votes.get(code=code)
-        except ObjectDoesNotExist:
-            return Response({'Błąd': 'Wprowadzony kod jest nieprawidłowy'}, status=status.HTTP_400_BAD_REQUEST)
-        try:
-            can_vote = CanVote.objects.get(vote=vote, voter=user)
-        except ObjectDoesNotExist:
-            if vote['start_date']>now:
-                can_vote = CanVote(vote=vote, voter=user)
-                can_vote.save()
-            else:
-                return Response({'Błąd': 'Wybory się rozpoczęły'}, status=status.HTTP_403_FORBIDDEN)
-            return Response(CanVoteSerializer(can_vote).data, status=status.HTTP_200_OK)
+        
+        
 
     def get(self, request, format=None):        
         user = get_user(request)
