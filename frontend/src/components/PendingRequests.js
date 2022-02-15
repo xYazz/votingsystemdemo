@@ -122,7 +122,7 @@ function PendingRequests() {
         <Container component="main" maxWidth="lg" sx={{ mb: 4 }}>
             {state.loading?<LoadingPage />:
                 <Paper elevation={16} sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
-                {state?.extra_data ?
+                {state?.extra_data?.can_vote?
                     <TableContainer component={Paper}>
                         <Table aria-label="collapsible table">
                             <TableHead>
