@@ -4,7 +4,7 @@ const CompressionPlugin = require('compression-webpack-plugin');
 const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = {
-  devtool: false,
+  devtool: 'none',
   entry: "./frontend/src/index.js",
   output: {
     path: path.resolve(__dirname, "./static/frontend"),
@@ -22,31 +22,55 @@ module.exports = {
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
-          options: { presets: ['@babel/env','@babel/preset-react'] },
+          options: { presets: ['@babel/env', '@babel/preset-react'] },
         },
       },
     ],
   },
 
+  performance: {
+    hints: "warning", // enum
+    maxAssetSize: 200000, // int (in bytes),
+    maxEntrypointSize: 400000, // int (in bytes)
+    assetFilter: function (assetFilename) {
+      // Function predicate that provides asset filenames
+      return assetFilename.endsWith('.css') || assetFilename.endsWith('.js');
+    }
+  },
+  performance: {
+    hints: "warning", // enum
+    maxAssetSize: 200000, // int (in bytes),
+    maxEntrypointSize: 400000, // int (in bytes)
+    assetFilter: function (assetFilename) {
+      // Function predicate that provides asset filenames
+      return assetFilename.endsWith('.css') || assetFilename.endsWith('.js');
+    }
+  },
   optimization: {
+    chunkIds: "size",
+    // method of generating ids for chunks
+    moduleIds: "size",
+    // method of generating ids for modules
+    mangleExports: "size",
+    // rename export names to shorter names
     minimize: true,
     minimizer: [new TerserPlugin()],
   },
   plugins: [
     new CompressionPlugin({
-      filename: '[path].gz[query]',
+      filename: '[path][filename].gz[query]',
       algorithm: 'gzip',
       test: /\.(js|css|html|svg)$/,
       threshold: 8192,
       minRatio: 0.8
-      }),
-      
+    }),
+
     new webpack.DefinePlugin({
       'process.env': {
         'NODE_ENV': JSON.stringify('production')
       }
     }),
-  
+
     new webpack.optimize.AggressiveMergingPlugin()
   ],
 };
