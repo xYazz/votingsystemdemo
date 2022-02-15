@@ -84,6 +84,9 @@ function Profile() {
 
     });
   }
+  const addCandidate = (data) => {
+    history.push("/add_candidate", { vote_id: data })
+  };
 
   useEffect(() => {
     getProfileDetails();
@@ -157,7 +160,7 @@ function Profile() {
                     </TableCell>
                     <TableCell>
                       <IconButton
-                        onClick={() => history.push("/add_candidate", {vote_id:vote.id})}>
+                        onClick={(e) => history.push("/add_candidate", {vote_id:vote.id})}>
                           <PersonAddIcon />
                         </IconButton>
                   </TableCell>
