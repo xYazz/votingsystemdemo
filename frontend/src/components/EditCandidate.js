@@ -42,9 +42,6 @@ const EditCandidate = (props) => {
       promptResponse(enqueueSnackbar, validation, 'error');
     }
   }
-  const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-  });
   
   return <div>
     <Dialog open={props.state.dialogCandidateEditOpen} onClose={() => {
