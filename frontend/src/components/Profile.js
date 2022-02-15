@@ -86,9 +86,13 @@ function Profile() {
     getProfileDetails();
   }, []);
 
+  const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+  });
+
   return <div>
     <Suspense fallback={<LoadingPage />}>
-      <ConfirmDialog state={state} setState={setState} getProfileDetails={getProfileDetails} />
+      <ConfirmDialog state={state} setState={setState} getProfileDetails={getProfileDetails} Transition={Transition}/>
       <EditVote state={state} setState={setState} getProfileDetails={getProfileDetails} />
       <EditCandidate state={state} setState={setState} getProfileDetails={getProfileDetails} />
     </Suspense>

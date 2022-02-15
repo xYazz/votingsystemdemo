@@ -25,15 +25,13 @@ const ConfirmDialog = (props) => {
       })
   }
 
-  const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-  });
+  
 
   return (
     <div>
       <Dialog
         open={props.state.confirmDialogOpen}
-        //TransitionComponent={Transition}
+        TransitionComponent={props.Transition}
         //keepMounted
         onClose={() => {
           props.setState({ ...props.state, confirmDialogOpen: false });
