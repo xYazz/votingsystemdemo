@@ -4,7 +4,6 @@ const CompressionPlugin = require('compression-webpack-plugin');
 const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = {
-  devtool: 'none',
   entry: "./frontend/src/index.js",
   output: {
     path: path.resolve(__dirname, "./static/frontend"),
@@ -47,6 +46,7 @@ module.exports = {
     }
   },
   optimization: {
+    
     chunkIds: "size",
     // method of generating ids for chunks
     moduleIds: "size",
