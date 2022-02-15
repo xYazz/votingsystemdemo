@@ -1,4 +1,4 @@
-const path = require("path");
+const path = require('path');
 const webpack = require("webpack");
 const CompressionPlugin = require('compression-webpack-plugin');
 const TerserPlugin = require("terser-webpack-plugin");
@@ -34,7 +34,7 @@ module.exports = {
   },
   plugins: [
     new CompressionPlugin({
-      filename: '[name].gz[query]',
+      filename: '[path].gz[query]',
       algorithm: 'gzip',
       test: /\.(js|css|html|svg)$/,
       threshold: 8192,
