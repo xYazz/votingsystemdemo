@@ -44,7 +44,7 @@ const ConfirmDialog = (props) => {
         <DialogTitle>{"Uwaga"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            Czy na pewno chcesz usunąć wybrany element?
+            { props.message }
           </DialogContentText>
         </DialogContent>
         <DialogActions>

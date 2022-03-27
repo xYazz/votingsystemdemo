@@ -3,7 +3,8 @@ import axios from 'axios';
 import jwt_decode from "jwt-decode";
 import dayjs from 'dayjs'
 
-const baseURL = 'https://votingsystemproject.herokuapp.com/';
+//const baseURL = 'https://votingsystemproject.herokuapp.com/';
+const baseURL = 'http://127.0.0.1:8000/';
 
 let accessToken = localStorage.getItem('access_token') ? localStorage.getItem('access_token') : null
 let refreshToken = localStorage.getItem('refresh_token') ? localStorage.getItem('refresh_token') : null

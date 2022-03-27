@@ -96,7 +96,7 @@ function Profile() {
 
   return <div>
     <Suspense fallback={<LoadingPage />}>
-      <ConfirmDialog state={state} setState={setState} getProfileDetails={getProfileDetails}/>
+      <ConfirmDialog state={state} setState={setState} message={"Czy na pewno chcesz usunąć wybrany element?"} getProfileDetails={getProfileDetails}/>
       <EditVote state={state} setState={setState} getProfileDetails={getProfileDetails} />
       <EditCandidate state={state} setState={setState} getProfileDetails={getProfileDetails} />
     </Suspense>

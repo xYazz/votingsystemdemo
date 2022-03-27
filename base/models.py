@@ -11,6 +11,7 @@ import string
 import random
 from .user.models import CustomUser
 
+#generates access code for private votes
 def generate_code():
     length = 6
     code_range = string.ascii_letters + string.digits
@@ -20,29 +21,31 @@ def generate_code():
             break
     return code
 
-def date():
-    return timezone.now()+timezone.timedelta(days=1)
-
+#stores vote's result summary
 class VoteResult(models.Model):
     vote = ForeignKey("Vote", on_delete=CASCADE)
     results = JSONField()
 
+#stores candidate instances
 class Candidate(models.Model):
     first_name = models.CharField(max_length=100, blank=False)
     last_name = models.CharField(max_length=100, blank=False)
     description = models.CharField(max_length=500, blank=False)
     vote = ForeignKey("Vote", on_delete=CASCADE)
 
+#stores information if/on what a certain voter voted for in a vote
 class VoteVoter(models.Model):
     vote = ForeignKey("Vote", on_delete=CASCADE)
     voter = ForeignKey(CustomUser, on_delete=models.PROTECT)
     candidate = ForeignKey("Candidate", on_delete=CASCADE)
 
+#stores users that have access to participate in a private vote
 class CanVote(models.Model):
     vote = ForeignKey("Vote", on_delete=CASCADE)
     voter = ForeignKey(CustomUser, on_delete=models.PROTECT)
     can_vote = models.BooleanField(default=False, blank=False)
 
+#stores vote data
 class Vote(models.Model):
     class Type(models.IntegerChoices):
         PRE = 1, "Wybory prezydenckie"

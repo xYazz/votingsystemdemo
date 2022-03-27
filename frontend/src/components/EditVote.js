@@ -29,7 +29,7 @@ const EditVote = (props) => {
     const handleVoteEditSubmit = () => {
         let validation = validateVoteData(props.state.toEditVote);
         if (validation == true) {
-            axiosInstance.put("api/get-vote/" + props.state.toEditVote.id, {
+            axiosInstance.patch("api/get-vote/" + props.state.toEditVote.id, {
                 name: props.state.toEditVote.name,
                 type: props.state.toEditVote.type,
                 description: props.state.toEditVote.description,

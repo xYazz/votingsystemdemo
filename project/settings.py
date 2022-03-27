@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-l^6(_8!4ez_k3p##6vst%p(*rbb^+gf$m1amlfh8xo^92cl)2u
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition
@@ -86,18 +86,18 @@ WSGI_APPLICATION = 'project.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ddosik9lme0ks3',
-        'USER': 'miajtaqurjzrpj',
-        'PASSWORD': '9a0912eedd53a394159959910d2d74731f3d12a4e4b714e98ee7475ea0ec0ecb',
-        'HOST': 'ec2-54-235-98-1.compute-1.amazonaws.com',
-        'PORT': '5432',
-    }
     # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'ddosik9lme0ks3',
+    #     'USER': 'miajtaqurjzrpj',
+    #     'PASSWORD': '9a0912eedd53a394159959910d2d74731f3d12a4e4b714e98ee7475ea0ec0ecb',
+    #     'HOST': 'ec2-54-235-98-1.compute-1.amazonaws.com',
+    #     'PORT': '5432',
     # }
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
 
 CORS_ALLOW_CREDENTIALS = True # to accept cookies via ajax request
