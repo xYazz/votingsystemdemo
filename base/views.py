@@ -86,8 +86,11 @@ class VoteVoterList(APIView):
         Vote_id = Vote.objects.get(id=request.GET.get('vote'))
         Voter_id = CustomUser.objects.get(id=request.GET.get('user'))
         votes = self.queryset.filter(vote=Vote_id, voter=Voter_id)
+
+        if not votes:
+            return Response({'Ok.': 'Allowed to vote'}, status=status.HTTP_200_OK)
         serializer = self.serializer_class(votes, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_403_FORBIDDEN)
     # def get(self, request, format=None):
     #     user = CustomUser.objects.get(id=request.data.get('user'))
     #     vote = Vote.objects.get(id=request.data.get('vote'))
@@ -101,15 +104,25 @@ class AddVoteVoterView(APIView):
     serializer_class = AddVoteVoterSerializer
 
     def post(self, request, format=None):
+        try:
+            user = get_user(request)
 
-        Vote_id = Vote.objects.get(id=request.data.get('vote'))
-        Voter_id = CustomUser.objects.get(id=request.data.get('voter'))
-        Candidate_id = Candidate.objects.get(id=request.data.get('candidate'))
-        vote_voter = VoteVoter(
-            vote=Vote_id, voter=Voter_id, candidate=Candidate_id)
-        vote_voter.save()
-        return Response(VoteVoterSerializer(vote_voter).data, status=status.HTTP_201_CREATED)
-        return Response({'Bad Request': 'Invalid Data...'}, status=status.HTTP_400_BAD_REQUEST)
+            vote = Vote.objects.get(id=request.data.get('vote'))
+            voter = CustomUser.objects.get(id=request.data.get('voter'))
+            if user.id != voter.id:
+                return Response({'Error', 'Unauthorized access'}, status=status.HTTP_401_UNAUTHORIZED)
+            candidate = Candidate.objects.get(id=request.data.get('candidate'))
+            if vote.private:
+                if not CanVote.objects.filter(vote=vote, voter=user):
+                    return Response({'Error', 'No permission to vote.'}, status=status.HTTP_403_FORBIDDEN)
+            if len(VoteVoter.objects.filter(vote=vote, voter=voter)) >= vote.max_votes:
+                return Response({'Error': 'Voted too many times.'}, status=status.HTTP_403_FORBIDDEN)
+            vote_voter = VoteVoter(
+                vote=vote, voter=voter, candidate=candidate)
+            vote_voter.save()
+            return Response(VoteVoterSerializer(vote_voter).data, status=status.HTTP_201_CREATED)
+        except ObjectDoesNotExist:
+            return Response({'Bad Request': 'Invalid Data...'}, status=status.HTTP_400_BAD_REQUEST)
 
 # returns all votes, for debugging
 
@@ -197,12 +210,12 @@ class CanVoteRequest(APIView):
                 try:
                     can_vote = CanVote.objects.get(vote=vote, voter=user)
                 except ObjectDoesNotExist:
-                    if parse_date(VoteSerializer(vote).data['start_date']) > now:
+                    if vote.start_date > now:
                         can_vote = CanVote(vote=vote, voter=user)
                         can_vote.save()
                     else:
                         return Response({'Błąd': 'Wybory się rozpoczęły'}, status=status.HTTP_403_FORBIDDEN)
-                    return Response(CanVoteSerializer(can_vote).data, status=status.HTTP_200_OK)
+                    return Response(CanVoteSerializer(can_vote).data, status=status.HTTP_201_CREATED)
             except ObjectDoesNotExist:
                 return Response({'Błąd': 'Wprowadzony kod jest nieprawidłowy'}, status=status.HTTP_400_BAD_REQUEST)
         except ObjectDoesNotExist:
@@ -258,7 +271,7 @@ class PendingCanVoteRequest(APIView):
             can_vote = self.queryset.get(id=pk)
             if can_vote.vote.owner == user:
                 can_vote.delete()
-                return Response({"Ok.": "Usunięto element."}, status=status.HTTP_202_ACCEPTED)
+                return Response({"Deleted.": "Element deleted."}, status=status.HTTP_202_ACCEPTED)
             else:
                 return Response({"Błąd": "Brak uprawnień."}, status=status.HTTP_401_UNAUTHORIZED)
         except ObjectDoesNotExist:
@@ -272,27 +285,41 @@ class GetCandidate(APIView):
     serializer_class = CandidateSerializer
     queryset = Candidate.objects.all()
 
+    def check_ownership(self, request, instance):
+        user = get_user(request)
+        vote = Vote.objects.get(id=instance.vote.id)
+        if user.id is not vote.owner.id:
+            return False
+        return True
+
     def get(self, request, pk, format=None):
         candidate = self.queryset.get(id=pk)
+        if not self.check_ownership(request, candidate):
+            return Response({"Error": "Unauthorized access"}, status=status.HTTP_401_UNAUTHORIZED)
         serializer = self.serializer_class(candidate)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def patch(self, request, pk):
+
         prev_instance = self.queryset.get(id=pk)
+        if not self.check_ownership(request, prev_instance):
+            return Response({"Error": "Unauthorized access"}, status=status.HTTP_401_UNAUTHORIZED)
         if prev_instance:
             serializer = self.serializer_class(
                 prev_instance, request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
-            return Response(serializer.errors, status=status.HTTP_208_ALREADY_REPORTED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response({'Bad Request': 'Invalid id.'}, status=status.HTTP_404_NOT_FOUND)
 
     def delete(self, request, pk):
         instance = self.queryset.get(id=pk)
         if instance:
+            if not self.check_ownership(request, instance):
+                return Response({"Error": "Unauthorized access"}, status=status.HTTP_401_UNAUTHORIZED)
             instance.delete()
-            return Response({"Ok.": "Usunięto element."}, status=status.HTTP_202_ACCEPTED)
+            return Response({"Deleted.": "Element deleted."}, status=status.HTTP_202_ACCEPTED)
         return Response({'Bad Request': 'Invalid candidate id.'}, status=status.HTTP_400_BAD_REQUEST)
 
 # get, update or delete vote
@@ -303,8 +330,16 @@ class GetVote(GetCandidate):
     serializer_class = VoteSerializer
     queryset = Vote.objects.all()
 
+    def check_ownership(self, request, instance):
+        user = get_user(request)
+        if user.id is not instance.owner.id:
+            return False
+        return True
+
     def get(self, request, pk):
         vote = self.queryset.get(id=pk)
+        if not self.check_ownership(request, vote):
+            return Response({"Error": "Unauthorized access"}, status=status.HTTP_401_UNAUTHORIZED)
         if vote:
             match vote.type:
                 case 1:
@@ -335,7 +370,7 @@ class Profile(APIView):
         if votes:
             return Response({"user": DisplayUserSerializer(user).data,
                              "votes": VoteSerializer(votes, many=True).data}, status=status.HTTP_200_OK)
-        
+
         return Response({"user": DisplayUserSerializer(user).data, "votes": []}, status=status.HTTP_200_OK)
 
 # get instance of finished vote's summary, create if doesn't exist
@@ -409,15 +444,17 @@ class Results(APIView):
             return Response(VoteResultSerializer(result).data, status=status.HTTP_200_OK)
 
 # probably useless
+
+
 class UserData(APIView):
     def get(self, request, format=None, **kwargs):
         user = CustomUser.objects.get(
             id=self.request.resolver_match.kwargs["pk"])
-        
+
         if user != get_user(request):
             return Response({"user": [], "votes": [], "Error": "Unauthorized access"}, status=status.HTTP_401_UNAUTHORIZED)
 
         votes = Vote.objects.filter(owner=user)
-        if len(votes)<1:
+        if len(votes) < 1:
             return Response({"user": DisplayUserSerializer(user).data, "votes": []}, status=status.HTTP_200_OK)
         return Response({"user": DisplayUserSerializer(user).data, "votes": json.loads(json.dumps(VoteSerializer(votes, many=True).data))}, status=status.HTTP_200_OK)
