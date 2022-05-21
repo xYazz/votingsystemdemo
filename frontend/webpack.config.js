@@ -64,6 +64,7 @@ module.exports = {
     // rename export names to shorter names
     minimize: true,
     minimizer: [new TerserPlugin()],
+    
   },
   plugins: [
     // new CompressionPlugin({
@@ -76,7 +77,7 @@ module.exports = {
 
     new webpack.DefinePlugin({
       'process.env': {
-        'NODE_ENV': JSON.stringify('production')
+        'NODE_ENV': JSON.stringify('development')
       }
     }),
 

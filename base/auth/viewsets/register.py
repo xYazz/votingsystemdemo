@@ -41,6 +41,5 @@ class RegistrationViewSet(ModelViewSet, TokenObtainPairView):
             errors =""
             if(serializer.errors["pesel"]):
                 errors+="Podany pesel już jest w użytku. "
-            print(serializer.errors)
             return JsonResponse({"Błąd": errors}, status=status.HTTP_400_BAD_REQUEST)
     

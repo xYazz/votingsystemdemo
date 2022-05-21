@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'base.user',
     'corsheaders',
     'rest_framework',
+    'sitting',
+    'channels',
     'frontend.apps.FrontendConfig',
     'rest_framework_simplejwt.token_blacklist',
 ]
@@ -81,6 +83,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'project.wsgi.application'
 
+ASGI_APPLICATION = 'project.asgi.application'
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [('localhost', 6379)],
+        },
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases

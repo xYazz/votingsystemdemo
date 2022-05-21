@@ -224,7 +224,6 @@ export default function SignUp() {
 		password: "Hasło powinno zawierać co najmniej 8 znaków, składać się z małych, wielkich liter, cyfr oraz znaków specjalnych.",
 		choice: "Pole wymagane"
 	}
-
 	const isValidField = (field, value) => {
 		let upper_field = ''
 		if (field.charAt(0) == "f" || field.charAt(0) == "l") {

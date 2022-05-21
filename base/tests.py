@@ -5,7 +5,6 @@ from urllib import response
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils import timezone
-from matplotlib.font_manager import json_dump, json_load
 from rest_framework.test import APIClient
 
 from .serializers import VoteSerializer

@@ -5,7 +5,7 @@
   "homepage": ".",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack --mode production --watch",
+    "dev": "webpack --mode development --watch",
     "build": "webpack --mode production"
   },
   "engines": {
@@ -43,7 +43,7 @@
     "devextreme-react": "21.2.5",
     "formik": "^2.2.9",
     "jwt-decode": "^3.1.2",
-    "moment": "^2.29.1",
+    "moment": "^2.29.3",
     "moment-timezone": "^0.5.33",
     "notistack": "^2.0.3",
     "react-cssfx-loading": "^1.0.3",
@@ -51,6 +51,7 @@
     "react-moment": "^1.1.1",
     "react-redux": "^7.2.6",
     "react-router-dom": "^5.3.0",
+    "react-websocket": "^2.1.0",
     "start": "^5.1.0",
     "uglify-js": "^3.15.1",
     "yup": "^0.32.11"

@@ -2,7 +2,7 @@ import React, { Component, Suspense, lazy } from "react";
 import { render } from "react-dom";
 import CreateVotePage from "./CreateVotePage";
 import Register from "./Register";
-import Header from "./Header";
+import { Header } from "./Header";
 import Footer from "./Footer";
 import Login from "./Login";
 import './App.css';
@@ -12,6 +12,7 @@ import { BrowserRouter as Router, Route, } from "react-router-dom";
 import HomePage from "./HomePage";
 import { StyledEngineProvider } from '@mui/material/styles';
 import { SnackbarProvider } from "notistack";
+import ManageSitting from "./ManageSitting";
 const Results = lazy(() => import("./Results"));
 const Votes = lazy(() => import("./Votes"));
 const Profile = lazy(() => import("./Profile"));
@@ -19,6 +20,8 @@ const Vote = lazy(() => import("./Vote"));
 const PendingRequests = lazy(() => import("./PendingRequests"));
 import JoinVote from "./JoinVote";
 import LoadingPage from "./LoadingPage";
+import Sitting from "./Sitting";
+import LiveSitting from "./LiveSitting";
 
 export default class App extends Component {
     constructor(props) {
@@ -46,6 +49,9 @@ export default class App extends Component {
                             <Route path='/join' component={JoinVote} />
                             <Route path='/Logout' component={Logout} />
                             <Route path='/create' component={CreateVotePage} />
+                            <Route exact path='/sitting' component={Sitting} />
+                            <Route exact path='/sittings' component={ManageSitting} />
+                            <Route exact path='/live_sitting' component={LiveSitting} />
                         </Router>
                         <Footer />
                     </SnackbarProvider>

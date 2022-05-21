@@ -15,4 +15,7 @@ urlpatterns = [
     path('results', index),
     path('join', index),
     path('pending', index),
+    path('sittings', index),
+    path('sitting', index),
+    path('live_sitting', index),
 ]

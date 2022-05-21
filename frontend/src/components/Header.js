@@ -17,13 +17,13 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import Stack from '@mui/material/Stack';
 
-const getUser = () => {
+function getUser () {
 	let refreshToken = localStorage.getItem('refresh_token') ? jwtDecode(localStorage.getItem('refresh_token')) : null;
 	if (refreshToken != null) {
 		let user = refreshToken.user_id;
 		let isExpired = dayjs.unix(refreshToken.exp).diff(dayjs()) < 1;
 		if (!isExpired) {
-			return true
+			return user
 		} else {
 			return false
 		}
@@ -228,4 +228,4 @@ function Header(props) {
 	);
 }
 
-export default Header;
+export { Header, getUser };
