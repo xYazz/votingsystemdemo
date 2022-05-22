@@ -3,7 +3,7 @@ from base.user.models import CustomUser
 from base.user.serializers import CustomUserSerializer
 from sitting.serializers import AnswerSerializer, QuestionSerializer, RoomSerializer
 from rest_framework.response import Response
-from .models import Answer, Question, Room
+from .models import Answer, Question, Room, SentAnswer
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework import mixins
@@ -23,11 +23,17 @@ class RoomList(APIView):
         return Response({"room_list": self.serializer_class(room_list, many=True).data}, status=status.HTTP_200_OK)
 
 @api_view(('GET',))
-def ListActiveSittings(request):
+def list_active_sittings(request):
     user = get_user(request)
     rooms = Room.objects.filter(id__in=user.allowed_rooms.all(), status=2)
     return Response({"room_list": RoomSerializer(rooms, many=True).data}, status=status.HTTP_200_OK)
 
+@api_view(('POST',))
+def check_if_voted(request):
+    user = request.data['user_pk']
+    question = request.data['question_pk']
+    if_voted = SentAnswer.objects.filter(user=user, question=question).exists()
+    return Response({"if_voted": if_voted}, status=status.HTTP_200_OK)
 
 class RoomView(APIView):
     serializer_class = RoomSerializer
