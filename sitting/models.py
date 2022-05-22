@@ -61,6 +61,7 @@ class SentAnswer(models.Model):
 class Answer(models.Model):
     answer = models.TextField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
+    times_voted = models.IntegerField(default=0, blank=False)
     question = models.ForeignKey(
         Question, on_delete=models.CASCADE, related_name="answers")
 
