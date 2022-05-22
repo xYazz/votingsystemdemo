@@ -4,7 +4,10 @@ import { useState } from 'react'
 import { Button, Typography, TextField, Grid, Container, Paper, MenuItem, Box } from '@material-ui/core';
 import { getUser } from './Header';
 import { Link } from 'react-router-dom';
-
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListSubheader from '@mui/material/ListSubheader';
 const ws = new WebSocket(
     'ws://'
     + window.location.host
@@ -24,12 +27,20 @@ class LiveSitting extends Component {
         }
     }
 
-    componentWillMount() {
+    componentDidMount() {
         const roomId = this.props.location.state.room_id;
         const userId = this.props.location.state.user_id;
         const isHost = this.props.location.state.isHost ? this.props.location.state.isHost : false;
 
         ws.onopen = function () {
+
+            ws.send(
+                JSON.stringify({
+                    pk: roomId,
+                    action: "subscribe_instance",
+                    request_id: userId,
+                })
+            );
             ws.send(
                 JSON.stringify({
                     pk: roomId,
@@ -54,13 +65,6 @@ class LiveSitting extends Component {
                     request_id: userId,
                 })
             );
-            ws.send(
-                JSON.stringify({
-                    pk: roomId,
-                    action: "subscribe_instance",
-                    request_id: userId,
-                })
-            );
             console.log('connected');
             console.log(this.props);
         }
@@ -75,22 +79,20 @@ class LiveSitting extends Component {
                         answers: data.data.questions[data.data.current_question].answers,
                         currentUsers: data.data.current_users,
                     });
-                    // setCurrentQuestion(data.data.current_question);
-                    // setAnswers(data.data.questions[data.data.current_question].answers)
-                    // questions=data.data.questions
-                    // current_question=data.data.current_question
-                    // answers=data.data.questions[current_question].answers
                     break;
                 case "update_users":
-                    this.setState({...this.state, currentUsers: data.users})
+                    this.setState({ ...this.state, currentUsers: data.users })
+                    console.log('here')
                     break;
                 case "update_current_question":
                     this.setState({ ...this.state, currentQuestion: data.data.current_question })
                     break;
-                // default:
-                //     break;
+                default:
+                    break;
             }
             console.log(data);
+            console.log(data['action']);
+            console.log(data.data);
         }
         ws.onclose = function (e) {
             console.log(e)
@@ -99,12 +101,57 @@ class LiveSitting extends Component {
     }
     render() {
         return (
-            <Container component="main" maxWidth="sm" sx={{ m: 4 }}>
+            <Container component="main" maxWidth="md" sx={{ m: 4 }}>
                 <Paper elevation={16} spacing={2}>
                     <Box m={2} pt={2}>
                         <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                                {this.state.isHost ?
+                            <Grid item xs container direction='column' spacing={1}>
+                                {this.state.questions.length > 0 ?
+                                    <Grid item xs={2}>
+                                        <Typography component='h4' variant='h4'>
+                                            {this.state.questions[this.state.currentQuestion].question}
+                                        </Typography>
+                                    </Grid> : null}
+                                <Grid item xs={3}>
+                                    <List
+                                        sx={{
+                                            width: '100%',
+                                            position: 'relative',
+                                            overflow: 'auto',
+                                        }}
+                                    >
+                                        {this.state.answers.map((answer) => (
+                                            <ListItem key={answer.id}>
+                                                <ListItemText primary={answer.answer} />
+                                            </ListItem>
+                                        ))}
+                                    </List>
+                                </Grid>
+                            </Grid>
+                            <Grid item xs={4}>
+                                <List
+                                    sx={{
+                                        width: '100%',
+                                        maxWidth: 360,
+                                        bgcolor: 'background.paper',
+                                        position: 'relative',
+                                        overflow: 'auto',
+                                        maxHeight: 300,
+                                        '& ul': { padding: 0 },
+                                    }}
+                                    subheader={<li />}
+                                >
+                                    <ListSubheader>{'Obecni użytkownicy'}</ListSubheader>
+                                    {this.state.currentUsers.map((obj) => (
+                                        <ListItem key={obj.id}>
+                                            <ListItemText primary={obj.email} />
+                                        </ListItem>
+                                    ))}
+
+                                </List>
+                            </Grid>
+                            {this.state.isHost ?
+                                <Grid item xs={8}>
                                     <Button fullWidth color='primary' variant='contained' onClick={() => {
                                         ws.send(JSON.stringify({
                                             action: "change_current_question",
@@ -112,15 +159,13 @@ class LiveSitting extends Component {
                                             question_pk: (this.state.currentQuestion + 1),
                                             request_id: this.state.userId,
                                         }))
-                                        this.setState({...this.state, currentQuestion: this.state.currentQuestion + 1})
+                                        this.setState({ ...this.state, currentQuestion: this.state.currentQuestion + 1 })
                                         console.log(this.state)
                                     }}>
                                         Następne pytanie
-                                    </Button> : null}
-
-                            </Grid>
+                                    </Button>
+                                </Grid> : null}
                         </Grid>
-                        <div> {this.state.currentQuestion}</div >
                     </Box>
                 </Paper>
             </Container>

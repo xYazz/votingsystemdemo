@@ -99,7 +99,9 @@ class RoomConsumer(ObserverModelInstanceMixin, GenericAsyncAPIConsumer):
     async def notify_users(self):
         print("notify_users_a")
         room: Room = await self.get_room(self.room_subscribe)
+        
         for group in self.groups:
+            print(group),
             await self.channel_layer.group_send(
                 group,
                 {
@@ -120,11 +122,11 @@ class RoomConsumer(ObserverModelInstanceMixin, GenericAsyncAPIConsumer):
             )
     async def update_current_question(self, event: dict):
         print("notify_users_cq")
-        await self.send(text_data=json.dumps({'data': {'action': 'update_current_question', 'current_question': event["current_question"]}}))
+        await self.send(text_data=json.dumps({'action': 'update_current_question', 'current_question': event["current_question"]}))
 
     async def update_users(self, event: dict):
         print("notify_users_b")
-        await self.send(text_data=json.dumps({'data': {'action': 'update_users', 'users': event["users"]}}))
+        await self.send(text_data=json.dumps({'action': 'update_users', 'users': event["users"]}))
 
 
     
@@ -161,6 +163,6 @@ class RoomConsumer(ObserverModelInstanceMixin, GenericAsyncAPIConsumer):
     @database_sync_to_async
     def add_user_to_room(self, pk, user_id):
         user:CustomUser = CustomUser.objects.get(id=user_id)
-        if not user.current_rooms.filter(pk=self.room_subscribe).exists():
+        if not user.current_rooms.filter(pk=pk).exists():
             user.current_rooms.add(Room.objects.get(pk=pk))
             user.save()
