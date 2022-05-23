@@ -38,7 +38,7 @@ class SentAnswerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SentAnswer
-        fields = ["pk", "room", "question", "answer", "user", "created_at"]
+        fields = ["pk", "question", "answer", "user", "created_at"]
         depth = 1
 
     def get_created_at_formatted(self, obj:SentAnswer):

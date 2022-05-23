@@ -44,8 +44,6 @@ class Question(models.Model):
         return f"Message({self.question})"
 
 class SentAnswer(models.Model):
-    room = models.ForeignKey(
-        "sitting.Room", on_delete=models.CASCADE, related_name="sent_answer")
     question = models.ForeignKey(
         "sitting.Question", on_delete=models.CASCADE, related_name="sent_answer")
     answer = models.ForeignKey(
@@ -55,7 +53,7 @@ class SentAnswer(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Message({self.room} {self.question} {self.answer} {self.user})"
+        return f"Message({self.question} {self.answer} {self.user})"
 
 
 class Answer(models.Model):
