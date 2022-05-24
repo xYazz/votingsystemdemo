@@ -34,12 +34,8 @@ class RoomSerializer(serializers.ModelSerializer):
 
 
 class SentAnswerSerializer(serializers.ModelSerializer):
-    created_at_formatted = serializers.SerializerMethodField()
 
     class Meta:
         model = SentAnswer
         fields = ["pk", "question", "answer", "user", "created_at"]
         depth = 1
-
-    def get_created_at_formatted(self, obj:SentAnswer):
-        return obj.created_at.strftime("%d-%m-%Y %H:%M:%S")

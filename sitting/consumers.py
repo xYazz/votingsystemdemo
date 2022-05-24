@@ -1,4 +1,6 @@
+from email import message
 import json
+from asgiref.sync import sync_to_async
 from django.shortcuts import get_object_or_404
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
@@ -6,13 +8,14 @@ from django.utils.timezone import now
 from django.conf import settings
 from typing import Generator
 from djangochannelsrestframework.generics import GenericAsyncAPIConsumer, AsyncAPIConsumer
-from djangochannelsrestframework.observer.generics import (ObserverModelInstanceMixin, action)
+from djangochannelsrestframework.observer.generics import (
+    ObserverModelInstanceMixin, action)
 from djangochannelsrestframework.observer import model_observer
 
 from base.user.models import CustomUser
 from base.user.serializers import CustomUserSerializer
 from .models import Answer, Question, Room, SentAnswer
-from .serializers import RoomSerializer
+from .serializers import AnswerSerializer, RoomSerializer, SentAnswerSerializer
 
 
 class RoomConsumer(ObserverModelInstanceMixin, GenericAsyncAPIConsumer):
@@ -20,13 +23,12 @@ class RoomConsumer(ObserverModelInstanceMixin, GenericAsyncAPIConsumer):
     serializer_class = RoomSerializer
     lookup_field = "pk"
     current_question = None
+
     async def disconnect(self, code):
         if hasattr(self, "room_subscribe"):
             await self.remove_user_from_room(self.room_subscribe, self.user_id)
             await self.notify_users('update_users', self.current_users)
         await super().disconnect(code)
-
-
 
     @action()
     async def join_room(self, pk, user_id, is_host, **kwargs):
@@ -39,7 +41,7 @@ class RoomConsumer(ObserverModelInstanceMixin, GenericAsyncAPIConsumer):
 
     @action()
     async def change_current_question(self, room_pk, question_pk, **kwargs):
-        if await self.get_number_of_questions_for_room(room_pk)>question_pk:
+        if await self.get_number_of_questions_for_room(room_pk) > question_pk:
             await self.set_current_question(room_pk, question_pk)
             await self.notify_users('update_current_question', self.current_question)
 
@@ -48,92 +50,54 @@ class RoomConsumer(ObserverModelInstanceMixin, GenericAsyncAPIConsumer):
         await self.remove_user_from_room(pk)
 
     @action()
-    async def create_sent_answer(self, user_id, answer_pk, **kwargs):
-        user = CustomUser.objects.get(id=user_id)
-        answer = Answer.objects.get(id=answer_pk)
+    async def create_sent_answer(self, user_id, answer_pk, question_pk, ** kwargs):
+        user = await self.get_user(user_id)
+        answer = await self.get_answer(answer_pk)
+        question = await self.get_question(question_pk)
         await database_sync_to_async(SentAnswer.objects.create)(
             user=user,
-            answer = answer
+            answer=answer,
+            question=question
         )
+        await self.add_one_vote_to_answer(answer_pk)
+        await self.notify_users('update_answer', self.get_sent_answer, answer_pk=answer_pk)
 
-    # @action()
-    # async def subscribe_to_answers_in_room(self, pk, request_id, **kwargs):
-    #     await self.sent_answer_activity.subscribe(room=pk, request_id=request_id)
+    async def notify_users(self, action, function_returning_data, **kwargs):
 
-    # @model_observer(SentAnswer)
-    # async def sent_answer_activity(
-    #     self,
-    #     sent_answer,
-    #     observer=None,
-    #     subscribing_request_ids = [],
-    #     **kwargs
-    # ):
-    #     """
-    #     This is evaluated once for each subscribed consumer.
-    #     The result of `@message_activity.serializer` is provided here as the message.
-    #     """
-    #     # since we provide the request_id when subscribing we can just loop over them here.
-    #     for request_id in subscribing_request_ids:
-    #         message_body = dict(request_id=request_id)
-    #         message_body.update(sent_answer)
-    #         await self.send_json(message_body)
+        if not kwargs:
+            room: Room = await self.get_room(self.room_subscribe)
+            content_data = await function_returning_data(room)
+        else:
+            content_data = await function_returning_data(**kwargs)
 
-    # @sent_answer_activity.groups_for_signal
-    # def sent_answer_activity(self, instance: SentAnswer, **kwargs):
-    #     yield f'room__{instance.room_id}'
-    #     yield f'pk__{instance.pk}'
-
-    # @sent_answer_activity.groups_for_consumer
-    # def sent_answer_activity(self, room=None, **kwargs):
-    #     if room is not None:
-    #         yield f'room__{room}'
-
-    # @sent_answer_activity.serializer
-    # def sent_answer_activity(self, instance:SentAnswer, action, **kwargs):
-    #     """
-    #     This is evaluated before the update is sent
-    #     out to all the subscribing consumers.
-    #     """
-    #     return dict(data=SentAnswer(instance).data, action=action.value, pk=instance.pk)
-
-
-    # async def notify_changed_current_question(self):
-    #     room: Room = await self.get_room(self.room_subscribe)
-    #     for group in self.groups:
-    #         await self.channel_layer.group_send(
-    #             group,
-    #             {
-    #                 'type':'update_current_question',
-    #                 'current_question':await self.current_question(room)
-    #             }
-    #         )
-
-    async def notify_users(self, action, function_returning_data):
-        room: Room = await self.get_room(self.room_subscribe)
-        
         for group in self.groups:
             await self.channel_layer.group_send(
                 group,
                 {
                     'type': 'update_data',
                     'action': action,
-                    'content':await function_returning_data(room)
+                    'content': content_data
                 }
             )
 
     async def update_data(self, event: dict):
-        print("notify_users_cq")
         await self.send(text_data=json.dumps({'action': event["action"], 'content': event["content"]}))
 
-    # async def update_users(self, event: dict):
-    #     print("notify_users_b")
-    #     await self.send(text_data=json.dumps({'action': 'update_users', 'users': event["users"]}))
+    @database_sync_to_async
+    def get_user(self, user_pk):
+        return CustomUser.objects.get(id=user_pk)
 
+    @database_sync_to_async
+    def get_answer(self, answer_pk):
+        return Answer.objects.get(id=answer_pk)
 
-    
+    @database_sync_to_async
+    def get_question(self, question_pk):
+        return Question.objects.get(id=question_pk)
+
     @database_sync_to_async
     def set_current_question(self, room_pk, question_pk):
-        room:Room = Room.objects.get(id=room_pk)
+        room: Room = Room.objects.get(id=room_pk)
         room.current_question = question_pk
         room.save()
 
@@ -141,6 +105,10 @@ class RoomConsumer(ObserverModelInstanceMixin, GenericAsyncAPIConsumer):
     def current_question(self, room: Room):
         return room.current_question
 
+    @database_sync_to_async
+    def get_sent_answer(self, **kwargs):
+        answer_pk = kwargs['answer_pk']
+        return AnswerSerializer(Answer.objects.get(id=answer_pk)).data
 
     @database_sync_to_async
     def get_number_of_questions_for_room(self, pk: int) -> int:
@@ -154,16 +122,21 @@ class RoomConsumer(ObserverModelInstanceMixin, GenericAsyncAPIConsumer):
     def current_users(self, room: Room):
         return [CustomUserSerializer(user).data for user in room.current_users.all()]
 
+    @database_sync_to_async
+    def add_one_vote_to_answer(self, answer_pk):
+        answer = Answer.objects.get(id=answer_pk)
+        answer.times_voted += 1
+        answer.save()
 
     @database_sync_to_async
     def remove_user_from_room(self, room, user_id):
-        user:CustomUser = CustomUser.objects.get(id=user_id)
+        user: CustomUser = CustomUser.objects.get(id=user_id)
         user.current_rooms.remove(room)
         user.save()
 
     @database_sync_to_async
     def add_user_to_room(self, pk, user_id):
-        user:CustomUser = CustomUser.objects.get(id=user_id)
+        user: CustomUser = CustomUser.objects.get(id=user_id)
         if not user.current_rooms.filter(pk=pk).exists():
             user.current_rooms.add(Room.objects.get(pk=pk))
             user.save()
