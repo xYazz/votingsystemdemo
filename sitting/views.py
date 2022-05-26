@@ -23,11 +23,15 @@ class RoomList(APIView):
         return Response({"room_list": self.serializer_class(room_list, many=True).data}, status=status.HTTP_200_OK)
 
 
+
 @api_view(('GET',))
-def list_active_sittings(request):
+def list_ongoing_and_finished_sittings(request):
     user = get_user(request)
-    rooms = Room.objects.filter(id__in=user.allowed_rooms.all(), status=2)
-    return Response({"room_list": RoomSerializer(rooms, many=True).data}, status=status.HTTP_200_OK)
+    ongoing_sittings = Room.objects.filter(id__in=user.allowed_rooms.all(), status=2)
+    finished_sittings = Room.objects.filter(id__in=user.allowed_rooms.all(), status=3)
+    return Response({
+        "ongoing_sittings": RoomSerializer(ongoing_sittings, many=True).data,
+        "finished_sittings": RoomSerializer(finished_sittings, many=True).data}, status=status.HTTP_200_OK)
 
 
 @api_view(('POST',))

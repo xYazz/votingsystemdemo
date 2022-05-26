@@ -100,7 +100,15 @@ function ManageSitting() {
     });
   }
 
-  const endSitting = () => {
+  const goToSitting = () => {
+    if (selectedSitting.status == 3) {
+      history.push('/finished_sitting', {
+        room_id: selectedSitting.pk,
+        user_id: getUser(),
+        isHost: true
+      })
+    }
+
     axiosInstance.patch('sitting/room/' + selectedSitting.pk, { status: 2 })
       .then(response => {
         if (response.status == 200) {
@@ -234,7 +242,7 @@ function ManageSitting() {
 
                     <Grid item xs={selectedQuestion ? 9 : 12}>
                       <ListCreateQuestion
-                        options={roomQuestions?roomQuestions:[]}
+                        options={roomQuestions ? roomQuestions : []}
                         selectedSitting={selectedSitting}
                         setAnswers={setAnswers}
                         setSelectedQuestion={setSelectedQuestion}
@@ -270,10 +278,12 @@ function ManageSitting() {
                           Usuń odpowiedź
                         </Button></Grid>
                       : null}</> : null}
-                <Button fullWidth color="primary" variant="contained" onClick={() => endSitting()}>
+                <Button fullWidth color="primary" variant="contained" onClick={() => goToSitting()}>
                   {selectedSitting.status == 1
                     ? 'Rozpocznij posiedzenie'
-                    : 'Dołącz do posiedzenia'}
+                    : selectedSitting.status == 2 ?
+                      'Dołącz do posiedzenia' :
+                      'Podsumowanie posiedzenia'}
                 </Button></>
               : null}
 

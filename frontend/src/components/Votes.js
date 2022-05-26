@@ -80,16 +80,16 @@ class Votes extends React.Component {
 		return (<div>
 			{console.log(this.state)},
 			<Container maxWidth="md" component="main" display='flex' >
-				{this.state.loading ? <LoadingPage />: (
+				{this.state.loading ? <LoadingPage /> : (
 					<Paper elevation={16} sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
 						<Stack spacing={2} direction="row" justifyContent={"center"} mb={3} mt={3}>
-											<Button color="primary" variant="contained" onClick={this.getCurrentVotes}>
-												Trwające głosowania
-											</Button>
-											<Button color="secondary" variant="contained" onClick={this.getFinishedVotes}>
-												Zakończone głosowania
-											</Button>
-										</Stack>
+							<Button color="primary" variant="contained" onClick={this.getCurrentVotes}>
+								Trwające głosowania
+							</Button>
+							<Button color="secondary" variant="contained" onClick={this.getFinishedVotes}>
+								Zakończone głosowania
+							</Button>
+						</Stack>
 						{this.state?.votes?.length > 0 ?
 							<React.Fragment>
 								<Grid container spacing={5} alignItems="flex-end">
@@ -123,7 +123,7 @@ class Votes extends React.Component {
 										);
 									})}
 								</Grid>
-							</React.Fragment>:
+							</React.Fragment> :
 							<Container component="main" maxWidth="sm" marginTop={1 / 10} sx={{ mb: 4 }}>
 								<Typography component="h1" variant="h5">
 									Brak głosowań do wyświetlenia.
