@@ -196,21 +196,6 @@ const Results = (props) => {
                 
                         <Export enabled={true} />
                       </PieChart>
-                        // <Chart
-                        //     dataSource={choiceData}
-                        // >
-                        //     <Series
-                        //         valueField="value"
-                        //         argumentField="label"
-                        //         type="bar"
-                        //         overlappingBehavior={'stagger'}
-                        //     />
-                        //     <Legend visible={false} />
-
-                        //     <Tooltip
-                        //         enabled={true}
-                        //     />
-                        // </Chart>
                         : null}
                 </React.Fragment>}
         </Container>

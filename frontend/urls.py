@@ -18,4 +18,5 @@ urlpatterns = [
     path('sittings', index),
     path('sitting', index),
     path('live_sitting', index),
+    path('finished_sitting', index)
 ]

@@ -22,6 +22,7 @@ import JoinVote from "./JoinVote";
 import LoadingPage from "./LoadingPage";
 import Sitting from "./Sitting";
 import LiveSitting from "./LiveSitting";
+import LiveSittingFinished from "./LiveSittingFinished";
 
 export default class App extends Component {
     constructor(props) {
@@ -52,6 +53,7 @@ export default class App extends Component {
                             <Route exact path='/sitting' component={Sitting} />
                             <Route exact path='/sittings' component={ManageSitting} />
                             <Route exact path='/live_sitting' component={LiveSitting} />
+                            <Route exact path='/finished_sitting' component={LiveSittingFinished} />
                         </Router>
                         <Footer />
                     </SnackbarProvider>

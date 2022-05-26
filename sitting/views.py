@@ -22,11 +22,13 @@ class RoomList(APIView):
         room_list = self.queryset.filter(host=owner)
         return Response({"room_list": self.serializer_class(room_list, many=True).data}, status=status.HTTP_200_OK)
 
+
 @api_view(('GET',))
 def list_active_sittings(request):
     user = get_user(request)
     rooms = Room.objects.filter(id__in=user.allowed_rooms.all(), status=2)
     return Response({"room_list": RoomSerializer(rooms, many=True).data}, status=status.HTTP_200_OK)
+
 
 @api_view(('POST',))
 def check_if_voted(request):
@@ -34,6 +36,7 @@ def check_if_voted(request):
     question = request.data['question_pk']
     if_voted = SentAnswer.objects.filter(user=user, question=question).exists()
     return Response({"if_voted": if_voted}, status=status.HTTP_200_OK)
+
 
 class RoomView(APIView):
     serializer_class = RoomSerializer
@@ -55,27 +58,29 @@ class RoomView(APIView):
                         status=status.HTTP_200_OK)
 
     def delete(self, request, pk):
-            room = Room.objects.get(id=pk)
-            user = get_user(request)
-            if room.host == user:
-                room.delete()
-                room_list = self.queryset.filter(host=user)
-                return Response({"room_list": RoomSerializer(room_list, many=True).data},
-                                status=status.HTTP_200_OK)
-            return Response({"Błąd": "Brak uprawnień."},
-                status=status.HTTP_403_FORBIDDEN)
+        room = Room.objects.get(id=pk)
+        user = get_user(request)
+        if room.host == user:
+            room.delete()
+            room_list = self.queryset.filter(host=user)
+            return Response({"room_list": RoomSerializer(room_list, many=True).data},
+                            status=status.HTTP_200_OK)
+        return Response({"Błąd": "Brak uprawnień."},
+                        status=status.HTTP_403_FORBIDDEN)
 
-    
     def patch(self, request, pk):
-            room = Room.objects.get(id=pk)
-            user = get_user(request)
-            if room.host == user:
-                room.status=2
-                room.save()
-                return Response({"room": RoomSerializer(room).data},
-                                status=status.HTTP_200_OK)
-            return Response({"Błąd": "Brak uprawnień."},
-                status=status.HTTP_403_FORBIDDEN)
+        room = Room.objects.get(id=pk)
+        status_code = request.data['status']
+        print(status_code)
+        user = get_user(request)
+        if room.host == user:
+            room.status = status_code
+            room.save()
+            return Response({"room": RoomSerializer(room).data},
+                            status=status.HTTP_200_OK)
+        return Response({"Błąd": "Brak uprawnień."},
+                        status=status.HTTP_403_FORBIDDEN)
+
 
 class AllowedUsersInRoom(APIView):
     serializer_class = RoomSerializer
@@ -128,7 +133,7 @@ class QuestionView(GenericAPIView):
                                 status=status.HTTP_401_UNAUTHORIZED)
             new_question = Question.objects.create(
                 room=room, question=question)
-            return Response({"question": self.serializer_class(new_question).data},
+            return Response(self.serializer_class(new_question).data,
                             status=status.HTTP_201_CREATED)
         return Response({"Błąd": "Nieprawidłowe dane."}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -143,15 +148,16 @@ class QuestionView(GenericAPIView):
                             status=status.HTTP_204_NO_CONTENT)
 
     def delete(self, request, pk):
-            question = Question.objects.get(id=pk)
-            user = get_user(request)
-            if question.room.host == user:
-                room=question.room
-                question.delete()
-                return Response({"room": RoomSerializer(room).data},
-                                status=status.HTTP_200_OK)
-            return Response({"Błąd": "Brak uprawnień."},
-                status=status.HTTP_403_FORBIDDEN)
+        question = Question.objects.get(id=pk)
+        user = get_user(request)
+        if question.room.host == user:
+            room = question.room
+            question.delete()
+            return Response({"room": RoomSerializer(room).data},
+                            status=status.HTTP_200_OK)
+        return Response({"Błąd": "Brak uprawnień."},
+                        status=status.HTTP_403_FORBIDDEN)
+
 
 class AnswerView(GenericAPIView):
     serializer_class = AnswerSerializer
@@ -184,13 +190,13 @@ class AnswerView(GenericAPIView):
                             status=status.HTTP_204_NO_CONTENT)
 
     def delete(self, request, pk):
-            answer = Answer.objects.get(id=pk)
-            user = get_user(request)
-            if answer.question.room.host == user:
-                question=answer.question
+        answer = Answer.objects.get(id=pk)
+        user = get_user(request)
+        if answer.question.room.host == user:
+            question = answer.question
 
-                answer.delete()
-                return Response({"question": QuestionSerializer(question).data},
-                                status=status.HTTP_200_OK)
-            return Response({"Błąd": "Brak uprawnień."},
-                status=status.HTTP_403_FORBIDDEN)
+            answer.delete()
+            return Response({"question": QuestionSerializer(question).data},
+                            status=status.HTTP_200_OK)
+        return Response({"Błąd": "Brak uprawnień."},
+                        status=status.HTTP_403_FORBIDDEN)

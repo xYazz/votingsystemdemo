@@ -100,6 +100,55 @@ function ManageSitting() {
     });
   }
 
+  const endSitting = () => {
+    axiosInstance.patch('sitting/room/' + selectedSitting.pk, { status: 2 })
+      .then(response => {
+        if (response.status == 200) {
+          history.push('/live_sitting', { room_id: selectedSitting.pk, user_id: getUser(), isHost: true })
+        }
+      }
+      )
+  }
+  const deleteAnswer = () => {
+    axiosInstance.delete(
+      '/sitting/answer/'
+      + selectedAnswer.answer_id)
+      .then(response => {
+        if (response.status == 200) {
+          setSelectedAnswer(0);
+          setAnswers(response.data.question.answers)
+        }
+        else {
+          console.log('Nie udało się usunąć.')
+        }
+      })
+  }
+
+  const deleteQuestion = () => {
+    axiosInstance.delete('/sitting/question/' + selectedQuestion.pk).then(response => {
+      if (response.status == 200) {
+        setSelectedQuestion(0);
+        setRoomQuestions(response.data.room.questions)
+      }
+      else {
+        console.log('Nie udało się usunąć.')
+      }
+    })
+  }
+  const deleteSitting = () => {
+    axiosInstance.delete(
+      '/sitting/room/'
+      + selectedSitting.pk)
+      .then(response => {
+        if (response.status == 200) {
+          setSelectedSitting(0);
+          setSittingsList(response.data.room_list)
+        }
+        else {
+          console.log('Nie udało się usunąć.')
+        }
+      })
+  }
   useEffect(() => {
     getUsersList();
     console.log(allowedUsers)
@@ -108,126 +157,128 @@ function ManageSitting() {
   return <div>
     <Container maxWidth="md" component="main">
       <Box mt={5}>
-        <Container component="main" maxWidth="md" sx={{ mb: 4 }}>
-          <Paper elevation={16} sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
-            <DisplaySittingsList setRoomQuestions={setRoomQuestions} allowedUsers={allowedUsers} setAllowedUsers={setAllowedUsers} sittingsList={sittingsList} setSittingsList={setSittingsList} selectedSitting={selectedSitting} setSelectedSitting={setSelectedSitting} />
-
-
-
+        <Paper elevation={16} sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
+          <Grid container spacing={1}>
+            <Grid item xs={12} align="center">
+              <Typography component='h4' variant='h4'>
+                Twoje posiedzenia:
+              </Typography>
+            </Grid>
+            <Grid item xs={selectedSitting.name ? 9 : 12}>
+              <DisplaySittingsList
+                setRoomQuestions={setRoomQuestions}
+                allowedUsers={allowedUsers}
+                setAllowedUsers={setAllowedUsers}
+                sittingsList={sittingsList}
+                setSittingsList={setSittingsList}
+                selectedSitting={selectedSitting}
+                setSelectedSitting={setSelectedSitting} />
+            </Grid>
             {selectedSitting.name ?
-              <>
-                <Button fullWidth color="secondary" variant="contained" onClick={() => {
-                  axiosInstance.delete('/sitting/room/' + selectedSitting.pk).then(response => {
-                    if (response.status == 200) {
-                      setSelectedSitting(0);
-                      setSittingsList(response.data.room_list)
-                    }
-                    else {
-                      console.log('Nie udało się usunąć.')
-                    }
-                  })
-                }}>
+              <><Grid item xs={3}>
+                <Button
+                  fullWidth
+                  color="secondary"
+                  variant="contained"
+                  style={{ minHeight: 52, maxHeight: 52 }}
+                  onClick={() => deleteSitting()}>
                   Usuń posiedzenie
                 </Button>
-                <Grid container spacing={2}>
-                  <Grid item xs={12} align="center">
-                    <Autocomplete
-                      multiple
-                      fullWidth
-                      limitTags={4}
-                      id="allowed-users"
-                      onChange={(event, value, details) => {
-                        console.log(selectedSitting)
-                        if (details == 'selectOption') {
+              </Grid>
+                {selectedSitting.status == 1 ?
+                  <>
+                    <Grid item xs={12}>
+                      <Autocomplete
+                        multiple
+                        fullWidth
+                        limitTags={4}
+                        id="allowed-users"
+                        onChange={(event, value, details) => {
                           console.log(selectedSitting)
-                          axiosInstance.post("sitting/room_users/", {
-                            room_pk: selectedSitting.pk,
-                            user_id: value[value.length - 1].id
-                          }).catch(error => {
-                            console.log(error)
-                          })
-                            .then(response => {
-                              if (response.status == 202) {
-                                setAllowedUsers(response.data.room.allowed_users)
-                              }
-                            });
-                        } else {
-                          axiosInstance.patch("sitting/room_users/", {
-                            room: selectedSitting.pk,
-                            user: value[value.length - 1].id
-                          }).catch(error => {
-                            console.log(error)
-                          })
-                            .then(response => {
-                              if (response.status == 202) {
-                                setAllowedUsers(response.data.room.allowed_users)
-                              }
-                            });
-                        }
+                          if (details == 'selectOption') {
+                            console.log(selectedSitting)
+                            axiosInstance.post("sitting/room_users/", {
+                              room_pk: selectedSitting.pk,
+                              user_id: value[value.length - 1].id
+                            }).catch(error => {
+                              console.log(error)
+                            })
+                              .then(response => {
+                                if (response.status == 202) {
+                                  setAllowedUsers(response.data.room.allowed_users)
+                                }
+                              });
+                          } else {
+                            axiosInstance.patch("sitting/room_users/", {
+                              room: selectedSitting.pk,
+                              user: value[value.length - 1].id
+                            }).catch(error => {
+                              console.log(error)
+                            })
+                              .then(response => {
+                                if (response.status == 202) {
+                                  setAllowedUsers(response.data.room.allowed_users)
+                                }
+                              });
+                          }
 
-                      }}
-                      options={usersList}
-                      getOptionLabel={(option) => option.email}
-                      value={allowedUsers}
-                      renderInput={(params) => (
-                        <TextField {...params} label="Lista członków" placeholder="Członkowie" />
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12} align="center">
-                    <ListCreateQuestion options={roomQuestions} selectedSitting={selectedSitting} setAnswers={setAnswers} setSelectedQuestion={setSelectedQuestion} setRoomQuestions={setRoomQuestions} label="Pytania" />
-                  </Grid>
-                  {selectedQuestion ?
-                    <Button fullWidth color="secondary" variant="contained" onClick={() => {
-                      axiosInstance.delete('/sitting/question/' + selectedQuestion.pk).then(response => {
-                        if (response.status == 200) {
-                          setSelectedQuestion(0);
-                          setRoomQuestions(response.data.room.questions)
-                        }
-                        else {
-                          console.log('Nie udało się usunąć.')
-                        }
-                      })
-                    }}>
-                      Usuń pytanie
-                    </Button>
-                    : null}
-                  {selectedQuestion ?
-                    <Grid item xs={12} align="center">
-                      <ListCreateAnswer options={answers} setAnswers={setAnswers} selectedQuestion={selectedQuestion} setSelectedAnswer={setSelectedAnswer} label="Opcje do wyboru" />
+                        }}
+                        options={usersList}
+                        getOptionLabel={(option) => option.email}
+                        value={allowedUsers}
+                        renderInput={(params) => (
+                          <TextField {...params} label="Lista członków" placeholder="Członkowie" />
+                        )}
+                      />
                     </Grid>
-                    : null}
 
-                  {selectedAnswer ?
-                    <Button fullWidth color="secondary" variant="contained" onClick={() => {
-                      axiosInstance.delete('/sitting/answer/' + selectedAnswer.answer_id).then(response => {
-                        if (response.status == 200) {
-                          setSelectedAnswer(0);
-                          setAnswers(response.data.question.answers)
-                        }
-                        else {
-                          console.log('Nie udało się usunąć.')
-                        }
-                      })
-                    }}>
-                      Usuń odpowiedź
-                    </Button>
-                    : null}
-                </Grid>
-                <Button fullWidth color="primary" variant="contained" onClick={() => {
-                  axiosInstance.patch('sitting/room/' + selectedSitting.pk)
-                    .then(response => {
-                      if (response.status == 200) {
-                        history.push('/live_sitting', { room_id: selectedSitting.pk, user_id: getUser(), isHost: true })
-                      }
-                    }
-                    )
-                }}>
-                  Rozpocznij posiedzenie
-                </Button>
-              </> : null}
-          </Paper>
-        </Container>
+                    <Grid item xs={selectedQuestion ? 9 : 12}>
+                      <ListCreateQuestion
+                        options={roomQuestions?roomQuestions:[]}
+                        selectedSitting={selectedSitting}
+                        setAnswers={setAnswers}
+                        setSelectedQuestion={setSelectedQuestion}
+                        setRoomQuestions={setRoomQuestions}
+                        label="Pytania" />
+                    </Grid>
+                    {selectedQuestion ?
+                      <Grid item xs={3}>
+                        <Button
+                          fullWidth
+                          color="secondary"
+                          variant="contained"
+                          style={{ minHeight: 52, maxHeight: 52 }}
+                          onClick={() => deleteQuestion()}>
+                          Usuń pytanie
+                        </Button></Grid>
+                      : null}
+                    {selectedQuestion ?
+
+                      <Grid item xs={selectedAnswer ? 9 : 12}>
+                        <ListCreateAnswer options={answers} setAnswers={setAnswers} selectedQuestion={selectedQuestion} setSelectedQuestion={setSelectedQuestion} setSelectedAnswer={setSelectedAnswer} label="Opcje do wyboru" />
+                      </Grid>
+                      : null}
+
+                    {selectedAnswer ?
+                      <Grid item xs={3}>
+                        <Button
+                          fullWidth
+                          color="secondary"
+                          variant="contained"
+                          style={{ minHeight: 52, maxHeight: 52 }}
+                          onClick={() => deleteAnswer()}>
+                          Usuń odpowiedź
+                        </Button></Grid>
+                      : null}</> : null}
+                <Button fullWidth color="primary" variant="contained" onClick={() => endSitting()}>
+                  {selectedSitting.status == 1
+                    ? 'Rozpocznij posiedzenie'
+                    : 'Dołącz do posiedzenia'}
+                </Button></>
+              : null}
+
+          </Grid>
+        </Paper>
       </Box>
     </Container>
   </div >;

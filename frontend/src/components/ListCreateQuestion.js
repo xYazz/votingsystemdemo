@@ -15,14 +15,16 @@ export default function ListCreateQuestion(props) {
           console.log('test')
           console.log(props.allowedUsers)
         if (typeof newValue === 'string') {
+          console.log('1')
           props.setSelectedQuestion({
             question: newValue.question,
             room: newValue.room,
             pk: newValue.pk,
           })
           console.log(props.allowedUsers)
-          props.setAnswers(newValue.answers)
+          props.setAnswers(newValue.answers?newValue.answers:[])
         } else if (newValue && newValue.inputValue) {
+          console.log('2')
           // Create a new value from the user input
           axiosInstance.post("sitting/room_questions/", {
             question: newValue.inputValue,
@@ -34,21 +36,23 @@ export default function ListCreateQuestion(props) {
               if (response.status == 201) {
                 props.setRoomQuestions([...props.options, response.data.question]),
                 props.setSelectedQuestion({
-                  question: response.data.question.question,
-                  room: response.data.question,
-                  pk: response.data.id
+                  question: response.data.question,
+                  room: response.data.room.pk,
+                  pk: response.data.pk
                 })
               }
+              console.log(response.data)
             });
             props.setAnswers([])
 
         } else {
+          console.log('3')
           props.setSelectedQuestion({
             question: newValue.question,
             pk: newValue.pk,
-            room: newValue.room
+            room: newValue.room.pk
           })
-          props.setAnswers(newValue.answers)
+          props.setAnswers(newValue.answers?newValue.answers:[])
         }
       }}
       filterOptions={(options, params) => {
@@ -84,6 +88,7 @@ export default function ListCreateQuestion(props) {
         return option.question;
       }}
       renderOption={(props, option) => <li {...props}>{option.question}</li>}
+      freeSolo
       renderInput={(params) => (
         <TextField {...params} label={props.label} />
       )}

@@ -92,7 +92,7 @@ const DisplaySittingsList = (props) => {
             });
     }
 
-    useEffect(() =>{
+    useEffect(() => {
         getSittingsList();
     }, []);
 
@@ -107,20 +107,15 @@ const DisplaySittingsList = (props) => {
     const classes = useStyles();
 
     return <div>
-        
-        
-                    <Grid container spacing={2}>
-                        <Grid item xs={12} align="center">
-                            <Typography component='h4' variant='h4'>
-                                Twoje posiedzenia:
-                            </Typography>
-                        </Grid>
 
-                        <Grid item xs={12} align="center">
-                            <ListCreateSitting setRoomQuestions={props.setRoomQuestions} options={props.sittingsList} setAllowedUsers={props.setAllowedUsers} setSittingsList={props.setSittingsList} selectedSitting={props.selectedSitting} setSelectedSitting={props.setSelectedSitting} label="Posiedzenia"/>
-                        </Grid>
-                        
-                    </Grid>
+        <ListCreateSitting setRoomQuestions={props.setRoomQuestions}
+            options={props.sittingsList}
+            setAllowedUsers={props.setAllowedUsers}
+            setSittingsList={props.setSittingsList}
+            selectedSitting={props.selectedSitting}
+            setSelectedSitting={props.setSelectedSitting}
+            label="Posiedzenia" />
+
     </div >;
 };
 

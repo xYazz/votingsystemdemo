@@ -17,6 +17,7 @@ export default function ListCreateSitting(props) {
           props.setSelectedSitting({
             name: newValue.name,
             pk: newValue.pk,
+            status: newValue.status
           })
           props.setRoomQuestions(newValue.questions)
           props.setAllowedUsers(newValue.allowed_users)
@@ -32,7 +33,8 @@ export default function ListCreateSitting(props) {
                 props.setSittingsList([...props.options, response.data.room]),
                 props.setSelectedSitting({
                   name: response.data.room.name,
-                  pk: response.data.room.id
+                  pk: response.data.room.id,
+                  status: newValue.status
                 })
               }
             });
@@ -42,7 +44,8 @@ export default function ListCreateSitting(props) {
         } else {
           props.setSelectedSitting({
             name: newValue.name,
-            pk: newValue.pk
+            pk: newValue.pk,
+            status: newValue.status
           })
           props.setRoomQuestions(newValue.questions)
           props.setAllowedUsers(newValue.allowed_users)

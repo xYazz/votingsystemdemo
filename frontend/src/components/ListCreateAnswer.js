@@ -29,11 +29,11 @@ export default function ListCreateAnswer(props) {
           })
             .then(response => {
               if (response.status == 201) {
-                props.setAnswers([...props.options, response.data.answer]),
+                props.setAnswers([...props.options, response.data.answer]);
                 props.setSelectedAnswer({
                   answer: response.data.answer.answer,
                   answer_id: response.data.answer.id
-                })
+                });
               }
             });
         } else {
@@ -76,6 +76,7 @@ export default function ListCreateAnswer(props) {
         return option.answer;
       }}
       renderOption={(props, option) => <li {...props}>{option.answer}</li>}
+      freeSolo
       renderInput={(params) => (
         <TextField {...params} label={props.label} />
       )}

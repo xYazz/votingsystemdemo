@@ -30,6 +30,12 @@ class RoomConsumer(ObserverModelInstanceMixin, GenericAsyncAPIConsumer):
             await self.notify_users('update_users', self.current_users)
         await super().disconnect(code)
 
+
+    @action()
+    async def end_vote(self, pk, request_id, is_host, **kwargs):
+        await self.disconnect(1000)
+        await super().close(code=1000)
+
     @action()
     async def join_room(self, pk, user_id, is_host, **kwargs):
         self.room_subscribe = pk
