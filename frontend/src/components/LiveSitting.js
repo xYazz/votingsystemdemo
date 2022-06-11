@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { useState } from 'react'
-import { Button, Typography, TextField, Grid, Container, Paper, MenuItem, Box } from '@material-ui/core';
+import { Button, Stepper, StepLabel, Step, Typography, TextField, Grid, Container, Paper, MenuItem, Box } from '@material-ui/core';
 import { getUser } from './Header';
 import { Link } from 'react-router-dom';
 import List from '@mui/material/List';
@@ -15,6 +15,7 @@ import PieChart, {
     Connector,
     Export,
 } from 'devextreme-react/pie-chart';
+import Skipper from './Skipper';
 
 const ws = new WebSocket(
     'ws://'
@@ -29,6 +30,7 @@ class LiveSitting extends Component {
             questions: [],
             currentQuestion: 0,
             currentUsers: [],
+            timesQuestionAnswered: 0,
             selectedAnswer: null,
             allowedUsers: [],
             alreadyAnswered: false,
@@ -81,6 +83,7 @@ class LiveSitting extends Component {
             ...this.state,
             answers: updated_answers,
             alreadyAnswered: true,
+            timesQuestionAnswered: this.state.timesQuestionAnswered+=1,
         })
     }
     pointClickHandler = (e) => {
@@ -106,6 +109,13 @@ class LiveSitting extends Component {
                 }
             }
             )
+    }
+    getTimesQuestionAnswered(answers){
+        let timesQuestionAnswered = 0;
+        answers.map(answer => {
+            timesQuestionAnswered+=answer.times_voted;
+        })
+        return timesQuestionAnswered;
     }
 
     disconnect = () => {
@@ -173,11 +183,13 @@ class LiveSitting extends Component {
                     data.data.status != 2 ? this.state.history.push(
                         '/sitting/finished/',
                         { room_id: this.state.roomId }) :
+
                         this.setState({
                             ...this.state,
                             questions: data.data.questions,
                             currentQuestion: data.data.current_question,
                             answers: data.data.questions[data.data.current_question].answers,
+                            timesQuestionAnswered: this.getTimesQuestionAnswered(data.data.questions[data.data.current_question].answers),
                             currentUsers: data.data.current_users,
                             allowedUsers: data.data.allowed_users
                         });
@@ -194,6 +206,7 @@ class LiveSitting extends Component {
                         ...this.state,
                         currentQuestion: data.content,
                         answers: this.state.questions[data.content].answers,
+                        timesQuestionAnswered: this.getTimesQuestionAnswered(this.state.questions[data.content].answers),
                     })
                     this.checkIfSentAnswerBefore();
                     break;
@@ -211,7 +224,8 @@ class LiveSitting extends Component {
                     this.setState({
                         ...this.state,
                         answers: updated_answers,
-                        questions: updated_questions
+                        questions: updated_questions,
+                        timesQuestionAnswered: this.getTimesQuestionAnswered(updated_answers),
                     })
                     break;
 
@@ -236,6 +250,15 @@ class LiveSitting extends Component {
                 <Paper elevation={16} spacing={2}>
                     <Box m={2} pt={2}>
                         <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                                <Skipper 
+                                questions={this.state.questions} 
+                                currentQuestion={this.state.currentQuestion}
+                                timesQuestionAnswered={this.state.timesQuestionAnswered}
+                                isHost={this.state.isHost}
+                                />
+
+                            </Grid>
                             <Grid item xs={8} container direction='column' spacing={1}>
                                 {this.state.questions.length > 0
                                     ? <Grid item xs>

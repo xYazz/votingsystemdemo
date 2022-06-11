@@ -54,7 +54,7 @@ const Results = (props) => {
             console.log(response.data)
             setState({
                 ...state,
-                results: response.data.results?JSON.parse(response.data.results):response.data.result?JSON.parse(response.data.result):null,
+                results: response.data.results.results?response.data.results:JSON.parse(response.data.results),
                 detail_id: 0,
                 detail_view: false,
                 loading: false,
@@ -120,7 +120,7 @@ const Results = (props) => {
                     {console.log(state.results)}
                     <form className={classes.form} noValidate>
                         <Container component="main" maxWidth="xs" sx={{ mb: 2 }}>
-                        {state.results?
+                        {state.results.results!='Brak oddanych głosów'?
                                 <React.Fragment>
                                     
                             <Grid container spacing={2}>

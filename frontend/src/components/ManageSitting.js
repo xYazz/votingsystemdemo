@@ -1,68 +1,23 @@
-import React, { useState, Suspense, lazy, useEffect } from 'react';
-import moment from "moment";
+import React, { useState, useEffect } from 'react';
 import axiosInstance from '../axios';
-import jwtDecode from 'jwt-decode';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Container from '@mui/material/Container';
-import Collapse from '@mui/material/Collapse';
-import IconButton from '@mui/material/IconButton';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableHead from '@mui/material/TableHead';
-import TableContainer from '@mui/material/TableContainer';
-import TableRow from '@mui/material/TableRow';
+import FormControl from "@material-ui/core/FormControl";
+import FormLabel from '@material-ui/core/FormLabel';
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Typography from '@mui/material/Typography';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import EditIcon from '@mui/icons-material/Edit';
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { useHistory } from 'react-router-dom';
-const EditVote = lazy(() => import('./EditVote'));
-const EditCandidate = lazy(() => import('./EditCandidate'));
-const ConfirmDialog = lazy(() => import('./ConfirmDialog'));
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
-import LoadingPage from './LoadingPage';
-import CreateSitting from './CreateSitting';
 import DisplaySittingsList from './DisplaySittingsList';
 import ListCreateQuestion from './ListCreateQuestion';
 import ListCreateAnswer from './ListCreateAnswer';
 import { Autocomplete } from '@mui/material';
 import { getUser } from './Header';
-import { Link } from 'react-router-dom';
-
-const vote_type = {
-  1: 'Wybory prezydenckie',
-
-  2: 'Wybory parlamentarne',
-
-  3: 'Wybory starosty roku',
-
-  4: 'Wybory dziekana wydziału',
-
-  5: 'Wybory ogólne',
-
-}
-
-const validateVoteData = (vote) => {
-  if (!vote.name || !vote.type || !vote.max_votes || !vote.start_date || !vote.end_date) {
-    return "Uzupełnij brakujące pola."
-  }
-  if (vote.name.length > 100) { return "Długość nazwy nie może przekraczać 100 znaków." };
-  if (vote.description.length > 500) { return "Długość opisu nie może przekraczać 500 znaków." };
-  var start = new Date(vote.start_date);
-  var end = new Date(vote.end_date);
-  var today = new Date();
-  if (start >= end) { return "Rozpoczęcie musi odbyć się przed zakończeniem." }
-  if (today > start) { return "Nie można ustawić daty rozpoczęcia wcześniejszej niż dzisiejsza data." }
-  if (today > end) { return "Nie można ustawić daty zakończenia wcześniejszej niż dzisiejsza data." }
-  return true
-}
-
 
 function ManageSitting() {
   const history = useHistory();
@@ -106,7 +61,7 @@ function ManageSitting() {
         room_id: selectedSitting.pk,
         user_id: getUser(),
         isHost: true
-      })
+      })  
     }
 
     axiosInstance.patch('sitting/room/' + selectedSitting.pk, { status: 2 })
@@ -131,6 +86,19 @@ function ManageSitting() {
         }
       })
   }
+  const handleTypeChange = (event) => {
+    axiosInstance.patch(
+      'sitting/room/'
+      + selectedSitting.pk, {
+      is_public: event.target.value == 'true' ? 'True' : 'False'
+    }).catch(error => { console.log(error) })
+      .then(response => {
+        if (response.status == 200) {
+          setSelectedSitting({ ...selectedSitting, is_public: response.data.room.is_public })
+        }
+      })
+    console.log(event.target.value);
+  };
 
   const deleteQuestion = () => {
     axiosInstance.delete('/sitting/question/' + selectedQuestion.pk).then(response => {
@@ -195,6 +163,24 @@ function ManageSitting() {
               </Grid>
                 {selectedSitting.status == 1 ?
                   <>
+                    <Grid item xs={12}>
+                      <FormControl>
+                        <FormLabel id="demo-radio-buttons-group-label">Typ posiedzenia</FormLabel>
+                        <RadioGroup
+                          row
+                          aria-labelledby="demo-radio-buttons-group-label"
+                          defaultValue={"false"}
+                          value={selectedSitting.is_public==true?'true':'false'}
+                          name="private"
+
+                          required
+                          onChange={handleTypeChange}
+                        >
+                          <FormControlLabel value={"true"} control={<Radio />} label="Jawne" />
+                          <FormControlLabel value={"false"} control={<Radio />} label="Tajne" />
+                        </RadioGroup>
+                      </FormControl>
+                    </Grid>
                     <Grid item xs={12}>
                       <Autocomplete
                         multiple

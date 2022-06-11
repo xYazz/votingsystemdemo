@@ -17,14 +17,16 @@ export default function ListCreateSitting(props) {
           props.setSelectedSitting({
             name: newValue.name,
             pk: newValue.pk,
-            status: newValue.status
+            status: newValue.status,
+            is_public: newValue.is_public,
           })
           props.setRoomQuestions(newValue.questions)
           props.setAllowedUsers(newValue.allowed_users)
         } else if (newValue && newValue.inputValue) {
           // Create a new value from the user input
           axiosInstance.post("sitting/create/", {
-            name: newValue.inputValue
+            name: newValue.inputValue,
+            is_public: false,
           }).catch(error => {
             console.log(error)
           })
@@ -34,7 +36,8 @@ export default function ListCreateSitting(props) {
                 props.setSelectedSitting({
                   name: response.data.room.name,
                   pk: response.data.room.id,
-                  status: newValue.status
+                  status: response.data.room.status,
+                  is_public: false,
                 })
               }
             });
@@ -45,7 +48,8 @@ export default function ListCreateSitting(props) {
           props.setSelectedSitting({
             name: newValue.name,
             pk: newValue.pk,
-            status: newValue.status
+            status: newValue.status,
+            is_public: newValue.is_public,
           })
           props.setRoomQuestions(newValue.questions)
           props.setAllowedUsers(newValue.allowed_users)

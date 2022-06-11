@@ -11,24 +11,20 @@ class AnswerSerializer(serializers.ModelSerializer):
 
 
 class QuestionSerializer(serializers.ModelSerializer):
-    last_answer = serializers.SerializerMethodField()
     answers = AnswerSerializer(many=True, read_only=True)
 
     class Meta:
         model = Question
-        fields = ["pk", "room", "question", "created_at", "answers", "last_answer"]
+        fields = ["pk", "room", "question", "answers",]
         depth = 1
-        read_only_fields = ["answers", "last_answer"]
-    
-    def get_last_answer(self, obj:Question):
-        return AnswerSerializer(obj.answers.order_by('created_at').last()).data
+        read_only_fields = ["answers"]
 
 class RoomSerializer(serializers.ModelSerializer):
     questions = QuestionSerializer(many=True, read_only=True)
 
     class Meta:
         model = Room
-        fields = ["pk", "name", "host", "status", "questions", "current_question", "current_users", "allowed_users"]
+        fields = ["pk", "name", "host", "status", "is_public", "questions", "current_question", "current_users", "allowed_users"]
         depth = 1
         read_only_fields = ["questions"]
 
@@ -37,5 +33,5 @@ class SentAnswerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SentAnswer
-        fields = ["pk", "question", "answer", "user", "created_at"]
+        fields = ["pk", "question", "answer", "user"]
         depth = 1

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Container, Paper, Box, Grid, TextField } from '@mui/material';
+import { Container, Paper, Box, Grid, TextField, Button, Typography } from '@mui/material';
 import MenuItem from '@material-ui/core/MenuItem';
 import axiosInstance from '../axios';
 import PieChart, {
@@ -8,6 +8,7 @@ import PieChart, {
     Connector,
     Export,
 } from 'devextreme-react/pie-chart';
+import LoadingPage from './LoadingPage';
 
 export class LiveSittingFinished extends Component {
     constructor(props) {
@@ -20,18 +21,20 @@ export class LiveSittingFinished extends Component {
             allowedUsers: this.props.location.state.questions ?
                 this.props.location.state.allowed_users : [],
             notVoted: '0',
+            showVoters: false,
+            results: [],
             currentQuestion: 0,
+            votedForAnswer: [],
             answers: this.props.location.state.questions ?
                 this.props.location.state.questions[0].answers : []
         }
     }
-    getNotVoted = () => {
+    getNotVoted = (allowedUsers, answers) => {
         let not_voted = 0
-        this.state.answers.map(answer => {
+        answers.map(answer => {
             not_voted += answer.times_voted;
         })
-
-        return (this.state.allowedUsers - not_voted).toString()
+        return (allowedUsers - not_voted).toString()
     }
 
     pointClickHandler = (e) => {
@@ -48,13 +51,17 @@ export class LiveSittingFinished extends Component {
 
         this.toggleVisibility(item);
     }
-    handleChange = async (event) => {
+    handleChange = (event) => {
         let updated_answers = []
         this.state.questions[event.target.value].answers.map(answer => {
             updated_answers.push({ answer: answer.answer, times_voted: answer.times_voted });
         })
-        console.log(updated_answers)
-        this.setState({ ...this.state, currentQuestion: event.target.value, answers: updated_answers, notVoted: this.getNotVoted() })
+        this.setState({ ...this.state, 
+            currentQuestion: event.target.value, 
+            showVoters: false, 
+            votedForAnswer: [], 
+            answers: updated_answers, 
+            notVoted: this.getNotVoted(this.state.allowedUsers, updated_answers) })
     }
 
     getResults() {
@@ -71,27 +78,31 @@ export class LiveSittingFinished extends Component {
             })
         return results
     }
+    getPublicData(question_pk) {
+        axiosInstance.get('sitting/votedforanswer/' + this.state.questions[question_pk].pk)
+            .then(response => {
+                if (response.status == 200) {
+                    this.setState({ ...this.state, showVoters: true, votedForAnswer: response.data })
+                }
+            })
 
+
+    }
     componentDidMount() {
-        console.log(this.state)
-        if (this.state.questions.length > 0) {
-            this.setState({ ...this.state, notVoted: this.getNotVoted() })
-        } else {
-            axiosInstance.get(
-                'sitting/room/' + this.state.roomId)
-                .then(response => {
-                    if (response.status == 200) {
-                        this.setState({
-                            ...this.state,
-                            questions: response.data.room.questions,
-                            allowedUsers: response.data.room.allowed_users.length,
-                            answers: response.data.room.questions[0].answers,
-                            notVoted: this.getNotVoted()
-                        });
-                    }
-                })
-
-        }
+        axiosInstance.get(
+            'sitting/room/' + this.state.roomId)
+            .then(response => {
+                if (response.status == 200) {
+                    this.setState({
+                        ...this.state,
+                        questions: response.data.room.questions,
+                        allowedUsers: response.data.room.allowed_users.length,
+                        answers: response.data.room.questions[0].answers,
+                        is_public: response.data.room.is_public,
+                        notVoted: this.getNotVoted(response.data.room.allowed_users.length, response.data.room.questions[0].answers)
+                    });
+                }
+            })
     }
     render() {
         return (
@@ -120,6 +131,7 @@ export class LiveSittingFinished extends Component {
                                         ))}
                                     </TextField>
                                 </Grid>
+                                
                                 <Grid item xs={12}>
                                     <PieChart
                                         id="pie"
@@ -141,7 +153,33 @@ export class LiveSittingFinished extends Component {
                                         <Export enabled={true} />
                                     </PieChart>
                                 </Grid>
-                            </Grid> : 'test'}
+                                {this.state.is_public ?
+                                    <Grid item xs={12}>
+                                        <Button onClick={() => this.getPublicData(this.state.currentQuestion)}>
+                                            Pokaż imiona
+                                        </Button>
+                                        {this.state.showVoters ?
+                                            this.state.questions[this.state.currentQuestion].answers.map(answer => {
+                                                return <React.Fragment>
+                                                    <Grid item xs={12}>
+                                                        <Typography>{answer.answer}:</Typography>
+                                                    </Grid>
+
+                                                    {this.state.votedForAnswer[answer.answer].length == 0 ?
+                                                        <Grid item xs>
+                                                            Brak głosów.
+                                                        </Grid> : null}
+                                                    {this.state.votedForAnswer[answer.answer].map((user, idx) => {
+                                                        return <Grid item xs>
+                                                            {user.first_name} {user.last_name}{idx < this.state.votedForAnswer[answer.answer].length - 1 ? ', ' : ''}
+                                                        </Grid>
+                                                    })
+                                                    }
+                                                </React.Fragment>
+                                            }) : null}
+                                    </Grid> : null
+                                }
+                            </Grid> : <LoadingPage/>}
                     </Box>
                 </Paper>
             </Container>

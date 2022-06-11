@@ -18,6 +18,7 @@ import jwtDecode from 'jwt-decode';
 import Container from '@material-ui/core/Container';
 import Paper from '@mui/material/Paper';
 import LoadingPage from './LoadingPage';
+import { Grid } from '@mui/material';
 
 const useStyles = makeStyles(() => ({
 	cardMedia: {
@@ -137,7 +138,7 @@ class Vote extends Component {
 		const { classes } = this.props;
 		return <div>
 			<Container maxWidth="md" component="main" sx={{ mb: 4 }}>
-				{this.state.loading ? <LoadingPage />:
+				{this.state.loading ? <LoadingPage /> :
 					(<Paper elevation={16} sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
 						<h3>{this.name}</h3>
 						<p>Rodzaj głosowania: {this.state.type}</p>
@@ -147,7 +148,7 @@ class Vote extends Component {
 						<p>Data zakończenia: {moment(this.state.end_date).format("YYYY-MM-DD " + "HH:mm:ss")}</p>
 						{(this.state.candidates.length < 1) ?
 							<h2>Brak kandydatów. Skontaktuj się z twórcą głosowania</h2> :
-							(this.state.able_to_vote == true) ?<React.Fragment>
+							(this.state.able_to_vote == true) ? <React.Fragment>
 								<Box sx={{ display: 'flex', justifySelf: 'center' }}>
 									<FormControl
 										required
@@ -156,35 +157,43 @@ class Vote extends Component {
 										sx={{ m: 3 }}
 										variant="standard"
 									>
-										<FormLabel component="legend" >Wybierz kandydatów</FormLabel>
-										<FormGroup aria-label='position' row>
-											{this.state.candidates.map((candidate) => {
-												return (
-													<Tooltip title={<h2>{candidate.description}</h2>}>
-														<FormControlLabel
-															control={
-																<Checkbox color='primary' value={candidate.id} checked={(this.state.picked_candidates.filter(element => element == candidate.id)).length > 0 ? true : false} onChange={(e) => this.handleChange(e)} name={candidate.first_name + " " + candidate.last_name} />
-															}
-															label={candidate.first_name + " " + candidate.last_name}
-														/></Tooltip>
+										<Grid container spacing={1}>
+											<Grid item xs={12}>
+												<FormLabel component="legend" >Wybierz kandydatów</FormLabel>
+											</Grid>
+											<Grid item xs={12}>
+												<FormGroup aria-label='position' row>
+													{this.state.candidates.map((candidate) => {
+														return (<Grid item xs={3}>
+															<Tooltip title={<h2>{candidate.description}</h2>}>
+																<FormControlLabel control={
+																	<Checkbox color='primary' value={candidate.id} checked={(this.state.picked_candidates.filter(element => element == candidate.id)).length > 0 ? true : false} onChange={(e) => this.handleChange(e)} name={candidate.first_name + " " + candidate.last_name} />
+																}
+																	label={candidate.first_name + " " + candidate.last_name}
+																/></Tooltip>
 
-												)
-											})}
-										</FormGroup>
-										<FormHelperText>Maksymalnie możesz wybrać {this.state.max_votes} {(this.state.max_votes == 1) ?
-											'kandydata' : 'kandydatów'}
-										</FormHelperText>
+														</Grid>)
+													})}
+												</FormGroup>
+											</Grid>
+
+											<Grid item xs={12}>
+												<FormHelperText>Maksymalnie możesz wybrać {this.state.max_votes} {(this.state.max_votes == 1) ?
+													'kandydata' : 'kandydatów'}
+												</FormHelperText>
+											</Grid>
+										</Grid>
 									</FormControl>
-									</Box> 
-									<Stack spacing={2} direction="row" justifyContent={"center"} mb={3} mt={3}>
-										<Button color="primary" variant="contained" onClick={this.handleVoteButtonPressed}>
-											Oddaj głos
-										</Button>
-										<Button margin="15px" color="secondary" variant="contained" to="/votes" component={Link}>
-											Powrót
-										</Button>
-									</Stack>
-									</React.Fragment>: <h2>Nie można oddać więcej głosów. Wyniki zostaną udostępnione po zakończeniu głosowania.</h2>}
+								</Box>
+								<Stack spacing={2} direction="row" justifyContent={"center"} mb={3} mt={3}>
+									<Button color="primary" variant="contained" onClick={this.handleVoteButtonPressed}>
+										Oddaj głos
+									</Button>
+									<Button margin="15px" color="secondary" variant="contained" to="/votes" component={Link}>
+										Powrót
+									</Button>
+								</Stack>
+							</React.Fragment> : <h2>Nie można oddać więcej głosów. Wyniki zostaną udostępnione po zakończeniu głosowania.</h2>}
 					</Paper>)}
 			</Container>
 

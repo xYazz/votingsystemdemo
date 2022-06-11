@@ -23,12 +23,13 @@ class RoomList(APIView):
         return Response({"room_list": self.serializer_class(room_list, many=True).data}, status=status.HTTP_200_OK)
 
 
-
 @api_view(('GET',))
 def list_ongoing_and_finished_sittings(request):
     user = get_user(request)
-    ongoing_sittings = Room.objects.filter(id__in=user.allowed_rooms.all(), status=2)
-    finished_sittings = Room.objects.filter(id__in=user.allowed_rooms.all(), status=3)
+    ongoing_sittings = Room.objects.filter(
+        id__in=user.allowed_rooms.all(), status=2)
+    finished_sittings = Room.objects.filter(
+        id__in=user.allowed_rooms.all(), status=3)
     return Response({
         "ongoing_sittings": RoomSerializer(ongoing_sittings, many=True).data,
         "finished_sittings": RoomSerializer(finished_sittings, many=True).data}, status=status.HTTP_200_OK)
@@ -42,6 +43,21 @@ def check_if_voted(request):
     return Response({"if_voted": if_voted}, status=status.HTTP_200_OK)
 
 
+@api_view(('GET',))
+def public_sitting_data(request, pk):
+    result = {}
+    question: Question = get_object_or_404(
+        Question, pk=request.resolver_match.kwargs["pk"])
+    answers = Answer.objects.filter(question=question)
+    for answer in answers.iterator():
+        user_ids = SentAnswer.objects.filter(
+            answer=answer).values_list('user', flat=True)
+        users = CustomUser.objects.filter(id__in=user_ids)
+        result[answer.answer] = CustomUserSerializer(users, many=True).data
+    return Response(result,
+                    status=status.HTTP_200_OK)
+
+
 class RoomView(APIView):
     serializer_class = RoomSerializer
     queryset = Room.objects.all()
@@ -49,8 +65,10 @@ class RoomView(APIView):
     def post(self, request, format=None):
         owner = get_user(request)
         name = request.data.get("name", None)
+        is_public = request.data.get("is_public", False)
         if name:
-            room = Room.objects.create(name=name, host=owner)
+            room = Room.objects.create(
+                name=name, host=owner, is_public=is_public)
             return Response({"room": RoomSerializer(room).data},
                             status=status.HTTP_201_CREATED)
 
@@ -74,11 +92,13 @@ class RoomView(APIView):
 
     def patch(self, request, pk):
         room = Room.objects.get(id=pk)
-        status_code = request.data['status']
-        print(status_code)
+        status_code = request.data.get('status', room.status)
+        is_public = request.data.get('is_public', room.is_public)
         user = get_user(request)
         if room.host == user:
             room.status = status_code
+            room.is_public = is_public
+            print(room.is_public)
             room.save()
             return Response({"room": RoomSerializer(room).data},
                             status=status.HTTP_200_OK)
