@@ -338,8 +338,8 @@ class GetVote(GetCandidate):
 
     def get(self, request, pk):
         vote = self.queryset.get(id=pk)
-        if not self.check_ownership(request, vote):
-            return Response({"Error": "Unauthorized access"}, status=status.HTTP_401_UNAUTHORIZED)
+        # if not self.check_ownership(request, vote):
+        #     return Response({"Error": "Unauthorized access"}, status=status.HTTP_401_UNAUTHORIZED)
         if vote:
             match vote.type:
                 case 1:
